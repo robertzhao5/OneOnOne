@@ -1,8 +1,8 @@
 from django.shortcuts import render
-from rest_framework import status
+from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import UserRegistrationSerializer
+from .serializers import ChangePasswordSerializer, UserRegistrationSerializer
 
 
 # view for handing User Registrations
@@ -17,3 +17,28 @@ class RegisterView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class UserProfileView(generics.RetrieveUpdateAPIView):
+    serializer_class = UserRegistrationSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
+
+
+class ChangePasswordView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        serializer = ChangePasswordSerializer(data=request.data)
+        if serializer.is_valid():
+            user = request.user
+            # check if user entered wrong password
+            if not user.check_password(serializer.validated_data['old_password']):
+                return Response({
+                    "old_password": ["Wrong password"]
+                }, status=status.HTTP_400_BAD_REQUEST)
+            user.set_password(serializer.validated_data['new_password'])
+            user.save()
+            return Response({"message": "Password updated successfully"}, status=status.HTTP_200_OK)
+        # password invalid
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
