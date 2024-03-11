@@ -7,7 +7,8 @@ from rest_framework.views import APIView
 
 from .serializers import UserContactDetailSerializer, UserContactSerializer
 
-from P2.contacts.models import UserContact
+from P2.contacts.models import MeetingInvite, UserContact
+from .utils import send_invitation_email
 
 
 class ListContactsView(ListAPIView):
@@ -71,4 +72,5 @@ class ContactDetailView(APIView):
             return Response({
                 'error': 'Contact not found'
             }, status=status.HTTP_404_NOT_FOUND)
+
 

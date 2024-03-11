@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from P2.contacts.models import TimeSlot, UserContact
+from P2.contacts.models import Availability, MeetingInvite, UserContact
 from ..accounts.serializers import UserProfileSerializer
 
 
@@ -16,7 +16,7 @@ class UserContactSerializer(serializers.ModelSerializer):
 
 class TimeSlotSerializer(serializers.ModelSerializer):
     class Meta:
-        model = TimeSlot
+        model = Availability
         fields = ['day', 'start_time', 'end_time']
 
 
@@ -27,3 +27,9 @@ class UserContactDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'first_name', 'last_name', 'email', 'availability']
+
+
+class MeetingInvitationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MeetingInvite
+        fields = ['id', 'meeting', 'invitee', 'status', 'sent_at', 'last_reminder']
