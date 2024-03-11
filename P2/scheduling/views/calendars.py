@@ -3,7 +3,8 @@ from rest_framework import status, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from ..models.meetings import Calendar
-from ..serializers import CalendarSerializer
+from ..serializer.calendars import CalendarSerializer
+from django.contrib.auth.models import User
 
 # Create your views here.
 class CalendarCreateView(APIView):
@@ -42,4 +43,4 @@ class CalendarDeleteView(APIView):
         calendar = Calendar.objects.get(pk=pk)
         calendar.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-    
+

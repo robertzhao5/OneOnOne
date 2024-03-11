@@ -7,7 +7,7 @@ from django.db import models
 class UserContact(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE,
                              related_name='contacts')
-    contact = models.ForeignKey(User, related_name='contact_of',
+    contact = models.ForeignKey(User, related_name='cont5act_of',
                                 on_delete=models.CASCADE)
     added_on = models.DateTimeField(auto_now_add=True)
 
