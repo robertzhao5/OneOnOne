@@ -17,3 +17,15 @@ class UserContact(models.Model):
 
     def __str__(self):
         return f"{self.user.username} has contact {self.contact.username}"
+
+
+class TimeSlot(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    day = models.DateField()
+    ranking = models.IntegerField()
+    available = models.BooleanField()
+
+    def __str__(self):
+        return f"{self.user.username}: {self.start_time} to {self.end_time}, ranking: {self.ranking}"
