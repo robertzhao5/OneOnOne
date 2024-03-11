@@ -25,7 +25,7 @@ class Availability(models.Model):
     start_time = models.TimeField()
     end_time = models.TimeField()
     day = models.DateField()
-    ranking = models.IntegerField()
+    rank = models.IntegerField()
     available = models.BooleanField()
 
     def __str__(self):
