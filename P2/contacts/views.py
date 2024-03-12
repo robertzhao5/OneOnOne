@@ -110,14 +110,4 @@ class UpdateContactAvailabilityView(APIView):
         return Response({"message": "Availability updated successfully"}, status=200)
 
 
-class InviteContactToMeetingView(APIView):
-    permission_classes = [IsAuthenticated]
 
-    def post(self, request, *args, **kwargs):
-        meeting_id = request.data.get('meeting_id')
-        invitee_id = request.data.get('invitee_id')
-        # Logic to create a MeetingInvitation instance and send email
-        invitation = MeetingInvite.objects.create(meeting_id=meeting_id,
-                                                  invitee_id=invitee_id)
-        send_invitation_email(invitation)
-        return Response({'message': 'Invitation sent successfully'}, status=200)

@@ -32,16 +32,4 @@ class Availability(models.Model):
         return f"{self.user.username}: {self.start_time} to {self.end_time}, ranking: {self.ranking}"
 
 
-class MeetingInvite(models.Model):
-    start_time = models.TimeField()
-    end_time = models.TimeField()
-    day = models.DateField()
-    invitee = models.ForeignKey(User, related_name='invitations',
-                                on_delete=models.CASCADE)
-    inviter = models.ForeignKey(User, related_name='sent-invites',
-                                on_delete=models.CASCADE)
-    sent_at = models.DateTimeField(auto_now_add=True)
-    last_reminder = models.DateTimeField(null=True, blank=True)
 
-    def __str__(self):
-        return f"{self.start_time} to {self.end_time}, invitee: {self.invitee}, inviter: {self.inviter}, sent_at: {self.sent_at}, last_reminder: {self}"

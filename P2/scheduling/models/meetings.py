@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from .calendars import Calendars
+from .calendar import Calendar
 
 # Create your models here.
 class Meetings(models.Model):
@@ -9,4 +9,4 @@ class Meetings(models.Model):
     end = models.DateTimeField()
     owner = models.ForeignKey('auth.User', related_name='events', on_delete=models.CASCADE)
     participants = models.OneToOneField(User)
-    calendar = models.ForeignKey(Calendars, related_name='events', on_delete=models.CASCADE) #TODO: check if this is correct
+    calendar = models.ForeignKey(Calendar, related_name='events', on_delete=models.CASCADE) #TODO: check if this is correct

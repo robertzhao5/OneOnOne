@@ -1,6 +1,6 @@
 from ..models.meetings import Meetings
 from django.contrib.auth.models import User
-from ..models.meetings import Calendars
+from ..models.meetings import Calendar
 from rest_framework import serializers
 
 class MeetingSerializer(serializers.ModelSerializer):
@@ -14,7 +14,7 @@ class MeetingEditSerializer(serializers.Serializer):
     start = serializers.DateTimeField(required=False)
     end = serializers.DateTimeField(required=False)
     participants = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=False)
-    calendar = serializers.PrimaryKeyRelatedField(queryset=Calendars.objects.all(), required=False)
+    calendar = serializers.PrimaryKeyRelatedField(queryset=Calendar.objects.all(), required=False)
 
     def validate(self, data):
         if not data['name'] and not data['start'] and not data['end'] and not data['participants'] and not data['calendar']:

@@ -1,10 +1,14 @@
 from django.shortcuts import render
 from rest_framework import status, permissions
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from ..models.meetings import Calendar
+from ..models.calendar import Calendar, CalendarInvite
 from ..serializer.calendars import CalendarSerializer
 from django.contrib.auth.models import User
+
+from ...contacts.utils import send_invitation_email
+
 
 # Create your views here.
 class CalendarCreateView(APIView):
@@ -15,7 +19,7 @@ class CalendarCreateView(APIView):
             serializer.save(owner=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
 class CalendarListView(APIView):
     serializer_class = CalendarSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -23,10 +27,10 @@ class CalendarListView(APIView):
         calendars = Calendar.objects.filter(owner=request.user)
         serializer = CalendarSerializer(calendars, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-    
+
 class CalendarEditView(APIView):#TODO check if user is owner of the calendar, check changes legal
     permission_classes = [permissions.IsAuthenticated]
-    
+
     def put(self, request, pk):
         user = request.user
         calendar = Calendar.objects.get(pk=pk)
@@ -35,7 +39,7 @@ class CalendarEditView(APIView):#TODO check if user is owner of the calendar, ch
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
 class CalendarDeleteView(APIView):
     permission_classes = [permissions.IsAuthenticated]
     def delete(self, request, pk):
@@ -43,4 +47,18 @@ class CalendarDeleteView(APIView):
         calendar = Calendar.objects.get(pk=pk)
         calendar.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class InviteContactToCalendarView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        calendar_id = request.data.get('calendar_id')
+        calendar = Calendar.objects.get(pk=calendar_id)
+        invitee_id = request.data.get('invitee_id')
+        # Logic to create a MeetingInvitation instance and send email
+        invitation = CalendarInvite.objects.create(calendar=calendar,
+                                                   invitee_id=invitee_id)
+        send_invitation_email(invitation)
+        return Response({'message': 'Invitation sent successfully'}, status=200)
 
