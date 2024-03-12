@@ -10,8 +10,8 @@ from rest_framework.views import APIView
 from .models import Availability
 from .serializers import UserContactDetailSerializer, UserContactSerializer
 
-from P2.contacts.models import MeetingInvite, UserContact
-from .utils import send_invitation_email
+from P2.contacts.models import UserContact
+from .utils import send_invitation_email, send_reminder_email
 
 
 class ListContactsView(ListAPIView):
@@ -62,6 +62,17 @@ class RemoveContactView(APIView):
             }, status=status.HTTP_404_NOT_FOUND)
 
 
+class RemindContact(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        user = self.request.user
+        recipient_contact_id = request.data.get('contact_id')
+        recipient = UserContact.objects.get(pk=recipient_contact_id).contact
+        send_reminder_email(self.request.user, recipient)
+        # send email
+
+
 # view contact from logged-in user's contact list with specified <id>
 class ContactDetailView(APIView):
     permission_classes = [IsAuthenticated]
@@ -108,6 +119,3 @@ class UpdateContactAvailabilityView(APIView):
             Availability.objects.create(user=user, day=day, start_time=start,
                                         end_time=end, rank=rank)
         return Response({"message": "Availability updated successfully"}, status=200)
-
-
-
