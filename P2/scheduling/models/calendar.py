@@ -12,12 +12,19 @@ class Calendar(models.Model):
 
 # Invite user to this event/(meeting calendar)
 class CalendarInvite(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('accepted', 'Accepted'),
+        ('declined', 'Declined'),
+    ]
     calendar = models.ForeignKey('Calendar')
     invitee = models.ForeignKey(User, related_name='invitations',
                                 on_delete=models.CASCADE)
     inviter = models.ForeignKey(User, related_name='sent-invites',
                                 on_delete=models.CASCADE)
     sent_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES,
+                              default='pending')
 
     def __str__(self):
         return f"name: {self.calendar.name}, invitee: {self.invitee}, inviter: {self.inviter}, sent_at: {self.sent_at}"

@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from rest_framework import status, permissions
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -50,7 +50,7 @@ class CalendarDeleteView(APIView):
 
 
 class InviteContactToCalendarView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
         calendar_id = request.data.get('calendar_id')
@@ -62,3 +62,14 @@ class InviteContactToCalendarView(APIView):
         send_invitation_email(invitation)
         return Response({'message': 'Invitation sent successfully'}, status=200)
 
+
+class AcceptCalendarInviteView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, invitation_id):
+        invitation = get_object_or_404(CalendarInvite, id=invitation_id, invitee=request.user)
+        invitation.status = 'accepted'
+        invitation.save()
+        invitation.calendar.participants.add(request.user)
+        return Response({'message': 'Invitation accepted and you are added to '
+                                    'the calendar'})
