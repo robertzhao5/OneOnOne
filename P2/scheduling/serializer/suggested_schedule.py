@@ -1,6 +1,8 @@
 # serializers.py
 from rest_framework import serializers
-from .models import SuggestedMeeting, SuggestedSchedule
+
+from scheduling.models.suggested_schedule import SuggestedMeeting, SuggestedSchedule
+
 
 class SuggestedMeetingSerializer(serializers.ModelSerializer):
     class Meta:
