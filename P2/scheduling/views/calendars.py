@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from ..models.calendar import Calendar, CalendarInvite
-from ..serializer.calendars import CalendarSerializer
+from ..serializer.calendars import *
 from django.contrib.auth.models import User
 
 from ...contacts.utils import send_invitation_email
@@ -28,13 +28,13 @@ class CalendarListView(APIView):
         serializer = CalendarSerializer(calendars, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-class CalendarEditView(APIView):#TODO check if user is owner of the calendar, check changes legal
+class CalendarEditView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def put(self, request, pk):
         user = request.user
         calendar = Calendar.objects.get(pk=pk)
-        serializer = CalendarSerializer(calendar, data=request.data)
+        serializer = CalendarEditSerializer(calendar, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
