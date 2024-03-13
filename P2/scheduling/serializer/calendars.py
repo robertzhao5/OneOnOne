@@ -1,6 +1,7 @@
 from ..models.calendars import Calendar
 from rest_framework import serializers
 
+
 class CalendarSerializer(serializers.ModelSerializer):
     class Meta:
         model = Calendar
@@ -10,11 +11,23 @@ class CalendarSerializer(serializers.ModelSerializer):
             'participants': {'required': False},
             'meetings': {'required': False}
         }
+
     def create(self, validated_data):
+        # remove many to many fields from validated data
+        participants_data = validated_data.pop('participants', None)
+        meetings_data = validated_data.pop('meetings', None)
+
+        # create calendar object with required fields
         calendar = Calendar.objects.create(**validated_data)
+
+        # set many to many field data
+        if participants_data:
+            calendar.participants.set(participants_data)
+        if meetings_data:
+            calendar.meetings.set(meetings_data)
         return calendar
 
-        
+
 class CalendarEditSerializer(serializers.ModelSerializer):
     name = serializers.CharField(max_length=100, required=False)
     participants = serializers.ListField(child=serializers.CharField(), required=False)
@@ -23,4 +36,4 @@ class CalendarEditSerializer(serializers.ModelSerializer):
     def validate(self, data):
         if not data['name'] and not data['participants'] and not data['meetings']:
             raise serializers.ValidationError("No data to update")
-        return data #TODO: verify if this is correct
+        return data  # TODO: verify if this is correct
