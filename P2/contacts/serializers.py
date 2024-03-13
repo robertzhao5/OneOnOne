@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from P2.contacts.models import Availability, MeetingInvite, UserContact
+from .models import Availability, MeetingInvite, UserContact #FIXME: can't find MeetingInvite
 from ..accounts.serializers import UserProfileSerializer
 
 

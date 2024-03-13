@@ -1,7 +1,7 @@
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from django.urls import path
 
-from P2.accounts.views import ChangePasswordView, RegisterView, UserProfileView
+from .views import ChangePasswordView, RegisterView, UserProfileView
 
 urlpatterns = [
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),

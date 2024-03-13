@@ -1,4 +1,4 @@
-from ..models.meetings import Calendar
+from ..models.calendars import Calendar
 from rest_framework import serializers
 
 class CalendarSerializer(serializers.ModelSerializer):

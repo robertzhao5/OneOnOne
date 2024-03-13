@@ -6,10 +6,9 @@ from .meetings import Meetings
 # Create your models here.
 class Calendar(models.Model):
     name = models.CharField(max_length=100)
-    owner = models.ForeignKey('auth.User', related_name='calendars',
+    owner = models.ForeignKey(User, related_name='owned_calendars',
                               on_delete=models.CASCADE)
-    participants = models.ManyToManyField(User, related_name='calendars',
-                                          on_delete=models.CASCADE)
+    participants = models.ManyToManyField(User, related_name='joined_calendars')
     meetings = models.ManyToManyField(Meetings)
 
 
@@ -20,7 +19,7 @@ class CalendarInvite(models.Model):
         ('accepted', 'Accepted'),
         ('declined', 'Declined'),
     ]
-    calendar = models.ForeignKey('Calendar')
+    calendar = models.ForeignKey(Calendar, on_delete=models.CASCADE)# TODO: check if correct, was giving errors 
     invitee = models.ForeignKey(User, related_name='invitations',
                                 on_delete=models.CASCADE)
     inviter = models.ForeignKey(User, related_name='sent-invites',

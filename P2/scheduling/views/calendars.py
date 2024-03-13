@@ -3,11 +3,11 @@ from rest_framework import status, permissions
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from ..models.calendar import Calendar, CalendarInvite
+from ..models.calendars import Calendar, CalendarInvite
 from ..serializer.calendars import *
 from django.contrib.auth.models import User
 
-from ...contacts.utils import send_invitation_email
+from ..utils import send_invitation_email
 
 
 # Create your views here.

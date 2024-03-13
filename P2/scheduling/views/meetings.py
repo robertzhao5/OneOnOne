@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from ..models.meetings import Meetings
 from ..serializer.meetings import MeetingSerializer
 from django.contrib.auth.models import User
-from ..models.calendar import Calendar
+from ..models.calendars import Calendar
 
 
 class MeetingCreateView(APIView):
