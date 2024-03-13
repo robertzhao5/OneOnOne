@@ -1,4 +1,7 @@
+import datetime
+
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.db import models
 
 
@@ -26,7 +29,23 @@ class Availability(models.Model):
     end_time = models.TimeField()
     day = models.DateField()
     rank = models.IntegerField()
-    available = models.BooleanField()
+
+    def clean(self):
+        # Ensure that the block is exactly 15 minutes
+        expected_end_time = (datetime.datetime.combine(datetime.date.today(), self.start_time) + datetime.timedelta(minutes=15)).time()
+        if self.end_time != expected_end_time:
+            raise ValidationError('End time must be exactly 15 minutes after start time.')
+
+        # Ensure that the time is between 9 AM and 12 AM
+        if not (datetime.time(9, 0) <= self.start_time < datetime.time(0, 0)):
+            raise ValidationError('Start time must be between 9 AM and 12 AM.')
+
+        if not (datetime.time(9, 15) <= self.end_time <= datetime.time(0, 0)):
+            raise ValidationError('End time must be between 9:15 AM and 12 AM.')
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.user.username}: {self.start_time} to {self.end_time}, ranking: {self.ranking}"
