@@ -5,8 +5,14 @@ class CalendarSerializer(serializers.ModelSerializer):
     class Meta:
         model = Calendar
         fields = ['id', 'name', 'owner', 'participants', 'events']
-        read_only_fields = ['owner']
-
+        extra_kwargs = {
+            'owner': {'read_only': True},
+            'participants': {'required': False},
+            'events': {'required': False}
+        }
+    def create(self, validated_data):
+        calendar = Calendar.objects.create(**validated_data)
+        return calendar
 
         
 class CalendarEditSerializer(serializers.ModelSerializer):

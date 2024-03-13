@@ -13,6 +13,7 @@ from ..utils import send_invitation_email
 # Create your views here.
 class CalendarCreateView(APIView):
     permission_classes = [permissions.IsAuthenticated]
+    
     def post(self, request):
         serializer = CalendarSerializer(data=request.data)
         if serializer.is_valid():
