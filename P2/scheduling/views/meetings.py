@@ -3,9 +3,10 @@ from rest_framework import status, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from ..models.meetings import Meetings
-from ..serializer.calendars import MeetingSerializer
+from ..serializer.meetings import MeetingSerializer
 from django.contrib.auth.models import User
 from ..models.calendar import Calendar
+
 
 class MeetingCreateView(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -16,7 +17,8 @@ class MeetingCreateView(APIView):
             serializer.save(owner=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
+
 class MeetingDetailView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -24,7 +26,8 @@ class MeetingDetailView(APIView):
         meeting = get_object_or_404(Meetings, id=meeting_id)
         serializer = MeetingSerializer(meeting)
         return Response(serializer.data, status=status.HTTP_200_OK)
-    
+
+
 class MeetingEditView(APIView):
     permissions_classes = [permissions.IsAuthenticated]
 
@@ -36,10 +39,11 @@ class MeetingEditView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
+
 class MeetingDeleteView(APIView):
     permission_classes = [permissions.IsAuthenticated]
-    
+
     def delete(self, request, pk):
         user = request.user
         meeting = Meetings.objects.get(pk=pk)

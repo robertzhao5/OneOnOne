@@ -2,12 +2,15 @@ from django.db import models
 from django.contrib.auth.models import User
 from .meetings import Meetings
 
+
 # Create your models here.
 class Calendar(models.Model):
     name = models.CharField(max_length=100)
-    owner = models.ForeignKey('auth.User', related_name='calendars', on_delete=models.CASCADE)
-    participants = models.ManyToManyField(User, related_name='calendars', on_delete=models.CASCADE)
-    events = models.ManyToManyField(Meetings)
+    owner = models.ForeignKey('auth.User', related_name='calendars',
+                              on_delete=models.CASCADE)
+    participants = models.ManyToManyField(User, related_name='calendars',
+                                          on_delete=models.CASCADE)
+    meetings = models.ManyToManyField(Meetings)
 
 
 # Invite user to this event/(meeting calendar)
