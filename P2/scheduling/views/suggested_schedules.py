@@ -1,13 +1,14 @@
-from calendar import Calendar
+
 from datetime import datetime
 
 from django.contrib.auth.models import User
+from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.db.models import Q
 
 from contacts.models import Availability
+from scheduling.models.calendars import Calendar
 from scheduling.models.suggested_schedule import SuggestedMeeting, SuggestedSchedule
 from scheduling.serializer.suggested_schedule import SuggestedScheduleSerializer
 
@@ -17,12 +18,14 @@ class GenerateSuggestedSchedulesView(APIView):
 
     def get(self, request, calendar_id):
         calendar = Calendar.objects.get(id=calendar_id)
-        organizer_availabilities = get_availabilities(calendar.owner_id)
-        participants_availabilities = get_participants_availabilities(
-            calendar_id)
+        if request.user != calendar.owner:
+            return Response("Unauthorized", status=status.HTTP_401_UNAUTHORIZED)
+
+        organizer_availabilities = get_availabilities(calendar, request.user)
+        participants_availabilities = get_participants_availabilities(calendar)
 
         suggested_schedules = []
-        # Simplified logic for demonstration purposes
+        # Simplified logic
         for participant_id, availabilities in participants_availabilities.items():
             for day, times in availabilities.items():
                 for start_time, end_time in times:
@@ -123,16 +126,12 @@ def check_intersection(organizer_availabilities, proposed_start, proposed_end,
     return False
 
 
-def get_availabilities(calendar_id, user_type):
+def get_availabilities(calendar, user):
     """
     Placeholder function to fetch weekly recurring availability blocks for a
     specific user type ('organizer' or 'participant'). This function should
     return a structured representation of weekly availability slots.
     """
-    # Implement actual fetching logic here
-    calendar = Calendar.objects.get(id=calendar_id)
-    user = calendar.owner if user_type == "organizer" else None  # Only
-    # fetching for organizer in this example
 
     availabilities = Availability.objects.filter(user=user).order_by('day',
                                                                      'start_time')
@@ -147,30 +146,17 @@ def get_availabilities(calendar_id, user_type):
     return weekly_availabilities
 
 
-def get_participants_availabilities(calendar_id):
+def get_participants_availabilities(calendar):
     """
-    Placeholder function to fetch weekly recurring availability blocks for all participants.
     Returns a structured representation of weekly slots.
     """
-    # Implement actual fetching logic here
     """
     Fetch weekly recurring availability blocks for all participants of a calendar.
     """
-    calendar = Calendar.objects.get(id=calendar_id)
     participants = calendar.participants.all()
 
     participant_availabilities = {}
     for participant in participants:
-        availabilities = Availability.objects.filter(user=participant).order_by(
-            'day', 'start_time')
-        weekly_availabilities = {day: [] for day in
-                                 ['Monday', 'Tuesday', 'Wednesday', 'Thursday',
-                                  'Friday', 'Saturday', 'Sunday']}
-
-        for availability in availabilities:
-            weekly_availabilities[availability.day].append(
-                (availability.start_time, availability.end_time))
-
-        participant_availabilities[participant.id] = weekly_availabilities
+        participant_availabilities[participant.id] = get_availabilities(calendar, participant)
 
     return participant_availabilities
