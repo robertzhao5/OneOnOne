@@ -22,7 +22,7 @@ class GenerateSuggestedSchedulesView(APIView):
             calendar_id)
 
         suggested_schedules = []
-        # Simplified logic for demonstration purposes
+        # Simplified logic
         for participant_id, availabilities in participants_availabilities.items():
             for day, times in availabilities.items():
                 for start_time, end_time in times:
@@ -123,13 +123,12 @@ def check_intersection(organizer_availabilities, proposed_start, proposed_end,
     return False
 
 
-def get_availabilities(calendar_id, user_type):
+def get_availabilities(calendar_id, user_type=None):
     """
     Placeholder function to fetch weekly recurring availability blocks for a
     specific user type ('organizer' or 'participant'). This function should
     return a structured representation of weekly availability slots.
     """
-    # Implement actual fetching logic here
     calendar = Calendar.objects.get(id=calendar_id)
     user = calendar.owner if user_type == "organizer" else None  # Only
     # fetching for organizer in this example
@@ -149,10 +148,8 @@ def get_availabilities(calendar_id, user_type):
 
 def get_participants_availabilities(calendar_id):
     """
-    Placeholder function to fetch weekly recurring availability blocks for all participants.
     Returns a structured representation of weekly slots.
     """
-    # Implement actual fetching logic here
     """
     Fetch weekly recurring availability blocks for all participants of a calendar.
     """
