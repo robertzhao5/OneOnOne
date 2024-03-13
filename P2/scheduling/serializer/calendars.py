@@ -7,9 +7,9 @@ class CalendarSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'owner', 'participants', 'events']
         read_only_fields = ['owner']
 
-#TODO add serializer for other calendar view.
+
         
-class CalendarEditSerializer(serializers.Serializer):
+class CalendarEditSerializer(serializers.ModelSerializer):
     name = serializers.CharField(max_length=100, required=False)
     participants = serializers.ListField(child=serializers.CharField(), required=False)
     events = serializers.ListField(child=serializers.CharField(), required=False)

@@ -7,7 +7,7 @@ class Calendar(models.Model):
     name = models.CharField(max_length=100)
     owner = models.ForeignKey('auth.User', related_name='calendars', on_delete=models.CASCADE)
     participants = models.ManyToManyField(User, related_name='calendars', on_delete=models.CASCADE)
-    events = models.ManyToManyField(Meetings) #TODO: create events model
+    events = models.ManyToManyField(Meetings)
 
 
 # Invite user to this event/(meeting calendar)

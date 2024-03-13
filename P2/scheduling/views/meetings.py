@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 from ..models.meetings import Meetings
 from ..serializer.calendars import MeetingSerializer
 from django.contrib.auth.models import User
+from ..models.calendar import Calendar
 
 class MeetingCreateView(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -30,7 +31,7 @@ class MeetingEditView(APIView):
     def put(self, request, pk):
         user = request.user
         meeting = Meetings.objects.get(pk=pk)
-        serializer = MeetingSerializer(calendar, data=request.data)
+        serializer = MeetingSerializer(Calendar, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
