@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'accounts',
     'scheduling',
     'contacts',
-    'timeSlot',
 ]
 
 REST_FRAMEWORK = {

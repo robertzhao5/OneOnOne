@@ -1,7 +1,9 @@
-from calendar import Calendar
+
 
 from django.db import models
 from django.contrib.auth.models import User
+
+from scheduling.models.calendars import Calendar
 
 
 class SuggestedMeeting(models.Model):
@@ -9,7 +11,7 @@ class SuggestedMeeting(models.Model):
     end = models.DateTimeField()
     organizer = models.ForeignKey('auth.User', related_name='events',
                                   on_delete=models.CASCADE)
-    participant = models.OneToOneField(User)
+    participant = models.OneToOneField(User, on_delete=models.CASCADE)
 
 
 class SuggestedSchedule(models.Model):

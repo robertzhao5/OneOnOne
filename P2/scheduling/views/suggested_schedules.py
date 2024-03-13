@@ -7,11 +7,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.db.models import Q
 
-from P2.contacts.models import Availability
-from P2.scheduling.models.suggested_schedule import SuggestedMeeting, \
-    SuggestedSchedule
-from P2.scheduling.serializer.suggested_schedule import \
-    SuggestedScheduleSerializer
+from contacts.models import Availability
+from scheduling.models.suggested_schedule import SuggestedMeeting, SuggestedSchedule
+from scheduling.serializer.suggested_schedule import SuggestedScheduleSerializer
 
 
 class GenerateSuggestedSchedulesView(APIView):

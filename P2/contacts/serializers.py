@@ -1,8 +1,8 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
+from accounts.serializers import UserProfileSerializer
 from .models import Availability, UserContact
-from ..accounts.serializers import UserProfileSerializer
 
 
 class UserContactSerializer(serializers.ModelSerializer):

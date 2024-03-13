@@ -7,10 +7,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Availability
+from .models import Availability, UserContact
 from .serializers import UserContactDetailSerializer, UserContactSerializer
 
-from P2.contacts.models import UserContact
 from .utils import send_invitation_email, send_reminder_email
 
 
