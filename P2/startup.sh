@@ -9,6 +9,11 @@ echo "venv is active..."
 echo "installing Django"
 pip install Django==4.2
 
+echo "installing required packages..."
+pip install Pillow
+pip install djangorestframework
+pip install djangorestframework-simplejwt
+
 
 echo "=============================================="
 echo "running db migrations..."
@@ -20,10 +25,3 @@ else
     echo "manage.py not found, skipping migrations..."
 fi
 echo "=============================================="
-
-echo "installing required packages..."
-pip install Pillow
-pip install djangorestframework
-pip install djangorestframework-simplejwt
-
-
