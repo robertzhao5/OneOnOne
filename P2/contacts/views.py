@@ -1,6 +1,7 @@
 import datetime
 
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status
 from rest_framework.generics import CreateAPIView, ListAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -40,6 +41,10 @@ class AddContactView(APIView):
         except User.DoesNotExist:
             # TODO: send user an email with link to register new user
             return Response({'message': 'User not found, invitation sent'},
+                            status=status.HTTP_404_NOT_FOUND)
+        except ObjectDoesNotExist:
+            # Handle other ObjectDoesNotExist exceptions here
+            return Response({'error': 'Object does not exist'},
                             status=status.HTTP_404_NOT_FOUND)
 
 
