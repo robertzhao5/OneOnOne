@@ -36,19 +36,19 @@ class Availability(models.Model):
         if self.end_time != expected_end_time:
             raise ValidationError('End time must be exactly 15 minutes after start time.')
 
-        # Ensure that the time is between 9 AM and 12 AM
-        if not (datetime.time(9, 0) <= self.start_time < datetime.time(0, 0)):
-            raise ValidationError('Start time must be between 9 AM and 12 AM.')
-
-        if not (datetime.time(9, 15) <= self.end_time <= datetime.time(0, 0)):
-            raise ValidationError('End time must be between 9:15 AM and 12 AM.')
+        # # Ensure that the time is between 9 AM and 12 AM
+        # if not (datetime.time(9, 0) <= self.start_time < datetime.time(0, 0)):
+        #     raise ValidationError('Start time must be between 9 AM and 12 AM.')
+        #
+        # if not (datetime.time(9, 15) <= self.end_time <= datetime.time(0, 0)):
+        #     raise ValidationError('End time must be between 9:15 AM and 12 AM.')
 
     def save(self, *args, **kwargs):
         self.clean()
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.user.username}: {self.start_time} to {self.end_time}, ranking: {self.ranking}"
+        return f"{self.user.username}: {self.start_time} to {self.end_time}, ranking: {self.rank}"
 
 
 

@@ -7,5 +7,5 @@ class Meetings(models.Model):
     name = models.CharField(max_length=100)
     start = models.DateTimeField()
     end = models.DateTimeField()
-    owner = models.ForeignKey(User, related_name='events', on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, related_name='owned_meetings', on_delete=models.CASCADE)
     participants = models.ForeignKey(User, related_name='participants', on_delete=models.CASCADE)
