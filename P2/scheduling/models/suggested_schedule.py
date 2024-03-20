@@ -7,8 +7,9 @@ from scheduling.models.calendars import Calendar
 
 
 class SuggestedMeeting(models.Model):
-    start = models.DateTimeField()
-    end = models.DateTimeField()
+    start = models.TimeField()
+    end = models.TimeField()
+    day = models.CharField(max_length=10)
     organizer = models.ForeignKey('auth.User', related_name='events',
                                   on_delete=models.CASCADE)
     participant = models.OneToOneField(User, on_delete=models.CASCADE)

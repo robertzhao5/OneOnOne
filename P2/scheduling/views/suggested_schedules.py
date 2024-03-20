@@ -1,4 +1,3 @@
-
 from datetime import datetime
 
 from django.contrib.auth.models import User
@@ -20,31 +19,22 @@ class GenerateSuggestedSchedulesView(APIView):
         calendar = Calendar.objects.get(id=calendar_id)
         if request.user != calendar.owner:
             return Response("Unauthorized", status=status.HTTP_401_UNAUTHORIZED)
-
-        organizer_availabilities = get_availabilities(calendar, request.user)
-        participants_availabilities = get_participants_availabilities(calendar)
-
-        suggested_schedules = []
-        # Simplified logic
-        for participant_id, availabilities in participants_availabilities.items():
-            for day, times in availabilities.items():
-                for start_time, end_time in times:
-                    if check_intersection(organizer_availabilities, start_time,
-                                          end_time, blocks_needed=1):
-                        # Create a SuggestedMeeting
-                        participant = User.objects.get(id=participant_id)
-                        suggested_meeting = SuggestedMeeting.objects.create(
-                            start=start_time,
-                            end=end_time,
-                            organizer=calendar.owner,
-                            participant=participant
-                        )
-                        suggested_schedules.append(suggested_meeting)
-                        break  # Simplification: break after first match
+        matchings = greedy_matching(calendar)
+        meetings = []
+        for participant in matchings:
+            day, start_time, end_time = matchings[participant]
+            suggested_meeting = SuggestedMeeting.objects.create(
+                start=start_time,
+                end=end_time,
+                day=day,
+                organizer=calendar.owner,
+                participant=participant
+            )
+            meetings.append(suggested_meeting)
 
         # Create a SuggestedSchedule with the matched meetings
         suggested_schedule = SuggestedSchedule.objects.create(calendar=calendar)
-        suggested_schedule.proposed_meetings.set(suggested_schedules)
+        suggested_schedule.proposed_meetings.set(meetings)
 
         # Serialize and return the suggested schedule
         serializer = SuggestedScheduleSerializer(suggested_schedule)
@@ -60,10 +50,8 @@ def find_maximal_matchings(calendar_id, desired_meeting_duration):
     sets.
     """
     # get organizer and participants' weekly availabilities
-    organizer_availabilities = get_availabilities(calendar_id,
-                                                  "organizer")
-    participants_availabilities = get_participants_availabilities(
-        calendar_id)
+    calendar = Calendar.objects.get(pk=calendar_id)
+    user_avail, participant_avail = get_user_participant_availabilities(calendar)
 
     matchings = []
     meeting_blocks_needed = desired_meeting_duration // 15
@@ -126,37 +114,68 @@ def check_intersection(organizer_availabilities, proposed_start, proposed_end,
     return False
 
 
-def get_availabilities(calendar, user):
-    """
-    Placeholder function to fetch weekly recurring availability blocks for a
-    specific user type ('organizer' or 'participant'). This function should
-    return a structured representation of weekly availability slots.
-    """
+# def get_availabilities(calendar, user):
+#     """
+#     Placeholder function to fetch weekly recurring availability blocks for a
+#     specific user type ('organizer' or 'participant'). This function should
+#     return a structured representation of weekly availability slots.
+#     """
+#
+#     availabilities = Availability.objects.filter(user=user).order_by('day',
+#                                                                      'start_time')
+#     weekly_availabilities = {day: [] for day in
+#                              ['Monday', 'Tuesday', 'Wednesday', 'Thursday',
+#                               'Friday', 'Saturday', 'Sunday']}
+#
+#     for availability in availabilities:
+#         weekly_availabilities[availability.day].append(
+#             (availability.start_time, availability.end_time))
+#
+#     return weekly_availabilities
 
-    availabilities = Availability.objects.filter(user=user).order_by('day',
-                                                                     'start_time')
-    weekly_availabilities = {day: [] for day in
-                             ['Monday', 'Tuesday', 'Wednesday', 'Thursday',
-                              'Friday', 'Saturday', 'Sunday']}
 
+# def get_participants_availabilities(calendar):
+#     """
+#     Returns a structured representation of weekly slots.
+#     """
+#     """
+#     Fetch weekly recurring availability blocks for all participants of a calendar.
+#     """
+#     participants = calendar.participants.all()
+#
+#     participant_availabilities = {}
+#     for participant in participants:
+#         participant_availabilities[participant.id] = get_availabilities(calendar,
+#                                                                         participant)
+#
+#     return participant_availabilities
+
+
+def get_user_participant_availabilities(calendar):
+    owner_availabilities = get_availabilities(calendar.owner)
+    participant_availabilities = []
+    for participant in calendar.participants.all():
+        participant_availabilities += get_availabilities(participant)
+    return owner_availabilities, participant_availabilities
+
+
+def get_availabilities(user):
+    times = []
+    availabilities = Availability.objects.filter(user=user)
     for availability in availabilities:
-        weekly_availabilities[availability.day].append(
-            (availability.start_time, availability.end_time))
+        day, start_time, end_time = availability.day, availability.start_time, availability.end_time
+        times.append((day, start_time, end_time))
+    return times
 
-    return weekly_availabilities
 
-
-def get_participants_availabilities(calendar):
-    """
-    Returns a structured representation of weekly slots.
-    """
-    """
-    Fetch weekly recurring availability blocks for all participants of a calendar.
-    """
+def greedy_matching(calendar):
+    owner = calendar.owner
     participants = calendar.participants.all()
-
-    participant_availabilities = {}
-    for participant in participants:
-        participant_availabilities[participant.id] = get_availabilities(calendar, participant)
-
-    return participant_availabilities
+    owner_avails = get_availabilities(owner)
+    matchings = {}
+    for owner_avail in owner_avails.copy():
+        for participant in participants:
+            if owner_avail in get_availabilities(participant):
+                matchings[participant] = owner_avail
+                break
+    return matchings

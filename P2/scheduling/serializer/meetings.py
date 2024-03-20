@@ -1,6 +1,6 @@
 from ..models.meetings import Meetings
 from django.contrib.auth.models import User
-from ..models.meetings import Calendar
+from ..models.calendars import Calendar
 from rest_framework import serializers
 
 class MeetingSerializer(serializers.ModelSerializer):
