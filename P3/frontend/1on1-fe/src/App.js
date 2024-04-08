@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 import Header from './components/header/Header';
 import CoverHeader from './components/cover/CoverHeader';
-import LandingPage from './components/cover/LandingPage';
+import LandingPage from './components/cover/landing/LandingPage';
 import LoginPage from './components/cover/LoginPage';
 
 
