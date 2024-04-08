@@ -15,7 +15,6 @@ function App() {
 
     return (
         <Router>
-            {isAuthenticated ? <Header/> : <CoverHeader/>}
             <Routes>
                 <Route path="/" element={<LandingPage/>}/>
             </Routes>

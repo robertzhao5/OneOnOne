@@ -3,8 +3,7 @@ import React from 'react';
 import CoverHeader from '../CoverHeader';
 import MainContent from './MainContent';
 import Footer from '../CoverFooter';
-import 'path/to/cover.css';
-import 'path/to/landing-header.css';
+import '../../../styles/cover.css';
 
 function LandingPage() {
     return (
