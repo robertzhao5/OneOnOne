@@ -14,7 +14,9 @@ pip install Pillow
 pip install djangorestframework django-cors-headers
 pip install djangorestframework-simplejwt
 
+# install react specific stuff
 npm install react-router-dom
+npm install bootstrap react-bootstrap
 
 
 echo "=============================================="
