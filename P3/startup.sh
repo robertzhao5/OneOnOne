@@ -14,6 +14,8 @@ pip install Pillow
 pip install djangorestframework django-cors-headers
 pip install djangorestframework-simplejwt
 
+npm install react-router-dom
+
 
 echo "=============================================="
 echo "running db migrations..."
