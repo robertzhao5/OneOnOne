@@ -1,10 +1,10 @@
 // LandingPage.js
 import React from 'react';
 import CoverHeader from '../CoverHeader';
-import MainContent from './MainContent'; // Assume you have a MainContent component
-import Footer from '../CoverFooter'; // Assume you have a Footer component
-import 'path/to/cover.css'; // Adjust path as necessary
-import 'path/to/landing-header.css'; // Adjust path as necessary
+import MainContent from './MainContent';
+import Footer from '../CoverFooter';
+import 'path/to/cover.css';
+import 'path/to/landing-header.css';
 
 function LandingPage() {
     return (
