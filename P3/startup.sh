@@ -11,13 +11,13 @@ pip install Django==4.2
 
 echo "installing required packages..."
 pip install Pillow
-pip install djangorestframework
+pip install djangorestframework django-cors-headers
 pip install djangorestframework-simplejwt
 
 
 echo "=============================================="
 echo "running db migrations..."
-$manage_path = "backend/OneonOne/manage.py"
+$manage_path="backend/OneonOne/manage.py"
 
 
 if [ -f "$manage_path" ]; then
