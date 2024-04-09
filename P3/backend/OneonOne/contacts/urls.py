@@ -9,4 +9,5 @@ urlpatterns = [
     path('remind-contact/', RemindContact.as_view(), name='remind_contact'),
     path('contact-detail/<int:contact_id>/', ContactDetailView.as_view(), name='contact_detail'),
     path('update-availability/', UpdateContactAvailabilityView.as_view(), name='update_availability'),
+    path('api/availabilities/<int:user_id>/', UserAvailabilitiesView.as_view(), name='user_availabilities'),
 ]

@@ -92,6 +92,23 @@ class ContactDetailView(APIView):
             }, status=status.HTTP_404_NOT_FOUND)
 
 
+class UserAvailabilitiesView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, user_id):
+        # Check if the target user exists
+        target_user = get_object_or_404(User, pk=user_id)
+
+        # Check if the requesting user is the target user or if they have a contact relationship
+        if request.user == target_user or UserContact.objects.filter(user=request.user, contact=target_user).exists():
+            availabilities = Availability.objects.filter(user=target_user)
+            serializer = AvailabilitySerializer(availabilities, many=True)
+            return Response(serializer.data)
+        else:
+            return Response({"detail": "Not allowed to view this user's availabilities."}, status=status.HTTP_403_FORBIDDEN)
+
+
+
 # request should be sent as a list of availabilities
 sample_request = {
     "availability": [
