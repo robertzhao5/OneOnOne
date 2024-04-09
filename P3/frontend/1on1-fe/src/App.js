@@ -57,7 +57,7 @@ function App() {
                 <Route path="/signup" element={<SignupPage/>}/>
                 <Route path="/login" element={<LoginPage/>}/>
                 <Route path="/about" element={<AboutPage/>}/>
-                <Route path="/suggestion" element={<Suggestion/>}/>
+                <Route path="/suggest" element={<Suggestion/>}/>
                 <Route path="/availabilities" element={<ProtectedRoute
                     isAuthenticated={isAuthenticated}><Availabilities/></ProtectedRoute>}/>
             </Routes>

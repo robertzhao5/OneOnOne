@@ -1,52 +1,56 @@
 import React from 'react';
 
-function Suggest(){
-    return(<main>
+function Suggest() {
+    return (<main>
         {/* <!--Side by side calendar comparison--> */}
-        <div class="d-flex flex-column flex-md-row p-4 gap-4 py-md-5 align-items-center justify-content-center">
-            <div class="d-flex flex-column flex-md-row p-4 gap-4 py-md-5 align-items-center justify-content-center">
+        <div
+            class="d-flex flex-column flex-md-row p-4 gap-4 py-md-5 align-items-center justify-content-center">
+            <div
+                class="d-flex flex-column flex-md-row p-4 gap-4 py-md-5 align-items-center justify-content-center">
             </div>
 
 
             <div class="calendar-group">
                 <h2>your calendar</h2>
-                
-            </div>
-            </div>
 
-            {/* <!--        calendar detail modal--> */}
-            <div
-                    class="modal fade"
-                    id="schedule-modal"
-                    tabindex="-1"
-                    role="dialog"
-                    aria-hidden="true"
-            >
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="schedule-modal-title"></h5>
-                        </div>
-                        <div class="modal-body">...</div>
-                        <div class="modal-footer">
-                            <button
-                                    type="button"
-                                    class="btn btn-secondary"
-                            >
-                                Close
-                            </button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
-                        </div>
+            </div>
+        </div>
+
+        {/* <!--        calendar detail modal--> */}
+        <div
+            class="modal fade"
+            id="schedule-modal"
+            tabindex="-1"
+            role="dialog"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="schedule-modal-title"></h5>
+                    </div>
+                    <div class="modal-body">...</div>
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                        >
+                            Close
+                        </button>
+                        <button type="button" class="btn btn-primary">Save changes
+                        </button>
                     </div>
                 </div>
             </div>
+        </div>
     </main>);
 }
+
 export default Suggest;
 {
 
     /*
-    
+
      <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
@@ -96,7 +100,8 @@ document.getElementById("save").onclick = function () {
     //     const bsAlert = new bootstrap.Toast(okAlert);
     //     bsAlert.show();
     // }
-</script> */}
+</script> */
+}
 
 //  {/* <!--For ok/not ok alert--> */}
 //  <div class="toast-container position-fixed bottom-0 end-0 p-3">
