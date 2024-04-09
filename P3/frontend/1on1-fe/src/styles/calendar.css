@@ -1,0 +1,39 @@
+#calendar {
+    border-radius: 80px;
+    th,
+    td {
+      border: 1px solid white;
+    }
+    td {
+      height: 110px;
+      width: 110px;
+      vertical-align: top;
+      text-align: left;
+      padding: 10px;
+      cursor: pointer;
+    }
+    td:hover {
+      background-color: #b999f9;
+    }
+    .disabled {
+      cursor: default;
+    }
+    .disabled:hover {
+      background-color: transparent;
+    }
+  }
+  .calendar-head {
+    text-align: center;
+  }
+  .today {
+    background-color: #702cf9;
+  }
+  #calendar-title {
+    display: flex;
+    align-items: center;
+    row-gap: 40px;
+    justify-content: center;
+  }
+  .calendar-arrow {
+    cursor: pointer;
+  }
