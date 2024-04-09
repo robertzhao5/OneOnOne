@@ -11,36 +11,36 @@ const api = axios.create();
 
 // Add a response interceptor
 api.interceptors.response.use(
-  response => {
-    // If the request succeeds, we don't have to do anything and just return the response
-    return response;
-  },
-  error => {
-    const originalRequest = error.config;
+    response => {
+        // If the request succeeds, we don't have to do anything and just return the response
+        return response;
+    },
+    error => {
+        const originalRequest = error.config;
 
-    // If the server responds with a 401 status (Unauthorized), try to refresh the token
-    if (error.response.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
+        // If the server responds with a 401 status (Unauthorized), try to refresh the token
+        if (error.response.status === 401 && !originalRequest._retry) {
+            originalRequest._retry = true;
 
-      return axios.post('/api/refresh', { refreshToken: localStorage.getItem('refreshToken') })
-        .then(res => {
-          if (res.status === 200) {
-            // Put the new token into the localStorage
-            localStorage.setItem('accessToken', res.data.accessToken);
+            return axios.post('/api/refresh', {refreshToken: localStorage.getItem('refreshToken')})
+                .then(res => {
+                    if (res.status === 200) {
+                        // Put the new token into the localStorage
+                        localStorage.setItem('accessToken', res.data.accessToken);
 
-            // Change the authorization header
-            axios.defaults.headers.common['Authorization'] = 'Bearer ' + res.data.accessToken;
+                        // Change the authorization header
+                        axios.defaults.headers.common['Authorization'] = 'Bearer ' + res.data.accessToken;
 
-            // And finally re-send the original request
-            originalRequest.headers['Authorization'] = 'Bearer ' + res.data.accessToken;
-            return api(originalRequest);
-          }
-        });
+                        // And finally re-send the original request
+                        originalRequest.headers['Authorization'] = 'Bearer ' + res.data.accessToken;
+                        return api(originalRequest);
+                    }
+                });
+        }
+
+        // If the request fails, we throw the error to the catch block
+        return Promise.reject(error);
     }
-
-    // If the request fails, we throw the error to the catch block
-    return Promise.reject(error);
-  }
 );
 
 function Availabilities() {
@@ -52,9 +52,14 @@ function Availabilities() {
         date.setDate(startDay.getDate() + i);
         return date;
     }));
-
+    let initialState = [{
+        "date": "20240102",
+        "day": 2,
+        "minTime": "15:15",
+        "maxTime": "15:30"
+    }]
     const [timeSlots, setTimeSlots] = useState(
-[]);
+        initialState);
 
 
     const handleSave = async () => {
@@ -89,8 +94,9 @@ function Availabilities() {
                     const response = await axios.get(`contacts/api/availabilities/${userId}/`);
                     if (response.data) {
                         let resTimeSlots = convertToTimeSlots(response.data);
-                        console.log(resTimeSlots);
-                        setTimeSlots(resTimeSlots);
+                        // console.log(resTimeSlots);
+                        // setTimeSlots(resTimeSlots);
+                        console.log("right now", timeSlots);
                     }
                 } catch (error) {
                     console.error("Error fetching availabilities:", error);
@@ -100,6 +106,18 @@ function Availabilities() {
         fetchAvailabilities().then(r => console.log(r));
 
     }, []);
+
+    useEffect(() => {
+        function periodicallyTriggeredFunction() {
+            console.log(timeSlots)
+        }
+
+        // Set up the interval
+        const intervalId = setInterval(periodicallyTriggeredFunction, 200000); // 5000ms = 5 seconds
+
+        // Clean-up function to clear the interval when the component unmounts
+        return () => clearInterval(intervalId);
+    }, []); // Empty dependency array means this effect runs only once after the initial render
 
 
     return (
@@ -112,7 +130,7 @@ function Availabilities() {
                     minTime={8}              // required
                     maxTime={21}             // required
                     dates={dates}            // required, required default: []
-                    timeSlots={timeSlots}        // required, required default: []
+                    timeSlots={timeSlots}       // required, required default: []
                     setTimeSlots={setTimeSlots}  // required
                     maxWidth="100%"
                     maxHeight="100%"

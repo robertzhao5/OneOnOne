@@ -32,7 +32,7 @@ axios.interceptors.response.use(response => response, async error => {
 
 async function refreshToken() {
     const refreshToken = localStorage.getItem('refreshToken');
-    const response = await axios.post('http://example.com/api/auth/refresh/', { refresh: refreshToken });
+    const response = await axios.post('api/token/refresh/', { refresh: refreshToken });
     return response.data;
 }
 
