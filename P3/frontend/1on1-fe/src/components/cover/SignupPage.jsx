@@ -1,11 +1,11 @@
 import React, {useEffect} from 'react';
-import LoginForm from "./forms/LoginForm";
+import RegistrationForm from "./forms/RegistrationForm";
 import CoverHeader from "./CoverHeader";
 import Footer from "./CoverFooter";
 import '../../styles/login.css'
 
 
-function LoginPage() {
+function SignupPage() {
         useEffect(() => {
         // add bootstrap classes to body on mount
         document.body.classList.add("d-flex", "h-100", "text-center", "text-bg-dark");
@@ -19,11 +19,11 @@ function LoginPage() {
         <div className="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
             <CoverHeader/>
             <main className="form-login form-signup w-100 m-auto">
-                <LoginForm/>
+                <RegistrationForm/>
             </main>
             <Footer/>
         </div>
     );
 }
 
-export default LoginPage;
+export default SignupPage;

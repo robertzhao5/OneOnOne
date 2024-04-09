@@ -3,14 +3,12 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
-import React from 'react';
-import {
-    BrowserRouter as Router, Routes, Route
-} from "react-router-dom";
-import Header from './components/header/Header';
-import CoverHeader from './components/cover/CoverHeader';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import LandingPage from './components/cover/landing/LandingPage';
-import LoginPage from './components/cover/LoginPage';
+import SignupPage from "./components/cover/SignupPage";
+import LoginPage from "./components/cover/LoginPage";
+import AboutPage from "./components/cover/AboutPage";
 
 import ListContacts from './components/contacts/ListContact';
 import Layout from './Layout';
@@ -27,13 +25,19 @@ function App() {
     };
   }, []);
 
+  useEffect(() => {
+      // set dark mode on html
+      document.documentElement.setAttribute('data-bs-theme', 'dark');
+  }, []);
+
   return (
     <BrowserRouter>
       <Routes>
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path = "/login" element={<LoginPage />} />
-          <Route path="/" element={<Layout />} />
+          <Route path="/" element={isAuthenticated ? <Navigate to="/Dashbord" /> : <Navigate to="/landing" />} />
           <Route path="/contacts" element={<ListContacts />} />
+          <Route path="/signup" element={<SignupPage/>}/>
+          <Route path="/login" element={<LoginPage/>}/>
+          <Route path="/about" element={<AboutPage/>}/>
       </Routes>
     </BrowserRouter>
   );

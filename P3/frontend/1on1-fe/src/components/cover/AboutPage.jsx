@@ -1,12 +1,12 @@
-import React, {useEffect} from 'react';
-import LoginForm from "./forms/LoginForm";
-import CoverHeader from "./CoverHeader";
-import Footer from "./CoverFooter";
-import '../../styles/login.css'
+// About Page
+import React, { useEffect } from 'react';
+import CoverHeader from './CoverHeader';
+import Footer from './CoverFooter';
+import '../../styles/cover.css';
+import AboutContent from "./AboutContent";
 
-
-function LoginPage() {
-        useEffect(() => {
+function AboutPage() {
+    useEffect(() => {
         // add bootstrap classes to body on mount
         document.body.classList.add("d-flex", "h-100", "text-center", "text-bg-dark");
         // remove bt classes on unmount
@@ -18,12 +18,10 @@ function LoginPage() {
     return (
         <div className="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
             <CoverHeader/>
-            <main className="form-login form-signup w-100 m-auto">
-                <LoginForm/>
-            </main>
+            <AboutContent/>
             <Footer/>
         </div>
     );
 }
 
-export default LoginPage;
+export default AboutPage;
