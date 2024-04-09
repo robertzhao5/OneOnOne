@@ -25,6 +25,9 @@ function Header() {
                         to="/suggest">Suggested</NavLink>
                     <NavLink
                         className={({isActive}) => "nav-link fw-bold py-1 px-0" + (isActive ? " active" : "")}
+                        to="/availabilities">Availabilities</NavLink>
+                    <NavLink
+                        className={({isActive}) => "nav-link fw-bold py-1 px-0" + (isActive ? " active" : "")}
                         to="/event-details">Event Details</NavLink>
                     <NavLink
                         className={({isActive}) => "nav-link fw-bold py-1 px-0" + (isActive ? " active" : "")}
