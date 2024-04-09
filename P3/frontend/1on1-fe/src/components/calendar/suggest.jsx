@@ -1,56 +1,82 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import { Table, Modal, ModalHeader, ModalBody, ModalFooter, Button, Form, FormGroup, Label, Input } from 'reactstrap';
+import axios from 'axios';
+import Header from '../header/Header';
+import {DraggableSelector} from "react-draggable-selector";
+
+
 
 function Suggest() {
-    return (<main>
-        {/* <!--Side by side calendar comparison--> */}
-        <div
-            class="d-flex flex-column flex-md-row p-4 gap-4 py-md-5 align-items-center justify-content-center">
-            <div
-                class="d-flex flex-column flex-md-row p-4 gap-4 py-md-5 align-items-center justify-content-center">
-            </div>
-
-
-            <div class="calendar-group">
-                <h2>your calendar</h2>
-
-            </div>
-        </div>
-
-        {/* <!--        calendar detail modal--> */}
-        <div
-            class="modal fade"
-            id="schedule-modal"
-            tabindex="-1"
-            role="dialog"
-            aria-hidden="true"
-        >
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="schedule-modal-title"></h5>
-                    </div>
-                    <div class="modal-body">...</div>
-                    <div class="modal-footer">
-                        <button
-                            type="button"
-                            class="btn btn-secondary"
-                        >
-                            Close
-                        </button>
-                        <button type="button" class="btn btn-primary">Save changes
-                        </button>
-                    </div>
+    const [suggestedCalendar, setSuggestedCalendar] = useState([]);    // State to store suggested calendar
+    const startDay = new Date('2024-01-01');
+    const [dates, setDates] = useState(Array.from({length: 5}, (_, i) => {
+        const date = new Date(startDay);
+        date.setDate(startDay.getDate() + i);
+        return date;
+    }));
+    const [timeSlots, setTimeSlots] = useState([]);
+    
+    return (
+        
+        <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column" id="sideBySide">
+            <Header />
+        <div class="d-flex flex-column flex-md-row p-4 gap-4 py-md-5 align-items-center justify-content-center">
+            <div class="d-flex flex-column flex-md-row p-4 gap-4 py-md-5 align-items-center justify-content-center">
+                <div class="calendarContainer">
+                <h2>suggested calendar</h2>
+                <DraggableSelector
+                    minTime={8}              // required
+                    maxTime={21}             // required
+                    dates={dates}            // required, required default: []
+                    timeSlots={timeSlots}        // required, required default: []
+                    setTimeSlots={setTimeSlots}  // required
+                    maxWidth="50%"
+                    maxHeight="100%"
+                    slotWidth={120}
+                    slotHeight={10}
+                    timeUnit={15}
+                    selectedSlotColor={"#90EE90"}
+                />
+                </div>
+                
+                <div class="calendar-group">
+                    <h2>your calendar</h2>
+                    <DraggableSelector
+                    minTime={8}              // required
+                    maxTime={21}             // required
+                    dates={dates}            // required, required default: []
+                    timeSlots={timeSlots}        // required, required default: []
+                    setTimeSlots={setTimeSlots}  // required
+                    maxWidth="50%"
+                    maxHeight="100%"
+                    slotWidth={120}
+                    slotHeight={10}
+                    timeUnit={15}
+                    selectedSlotColor={"#90EE90"}
+                />
                 </div>
             </div>
         </div>
-    </main>);
+        </div>
+            );
 }
 
 export default Suggest;
 {
 
     /*
+<div id="liveAlertPlaceholder"></div>
+                <button class="btn btn-primary d-inline-flex align-items-center" type="button" id="liveAlertBtn"
+                        data-bs-target="#calendarCarousel">
+                    Pick this one&nbsp;
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                         class="bi bi-arrow-right" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                              d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
+                    </svg>
 
+                </button>
+            </div>
      <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
