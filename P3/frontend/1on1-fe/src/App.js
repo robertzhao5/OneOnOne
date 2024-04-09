@@ -11,6 +11,7 @@ import Suggestion from "./components/calendar/suggest";
 import Availabilities from "./components/availabilities/Availabilities";
 import ListContacts from './components/contacts/ListContact';
 import Dashboard from "./components/dashboard/Dashboard";
+import EventDetail from './components/EventDetails/EventDetails';
 import {AuthProvider} from './components/auth/AuthContext';
 
 import {verifyToken, ProtectedRoute} from "./utils/utils";
@@ -57,6 +58,7 @@ function App() {
                 <Route path="/signup" element={<SignupPage/>}/>
                 <Route path="/login" element={<LoginPage/>}/>
                 <Route path="/about" element={<AboutPage/>}/>
+                <Route path="/event" element={<EventDetail/>}/>
                 <Route path="/suggest" element={<Suggestion/>}/>
                 <Route path="/availabilities" element={<ProtectedRoute
                     isAuthenticated={isAuthenticated}><Availabilities/></ProtectedRoute>}/>
