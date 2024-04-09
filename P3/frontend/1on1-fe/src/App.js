@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import LandingPage from './components/cover/landing/LandingPage';
 import SignupPage from "./components/cover/SignupPage";
 import LoginPage from "./components/cover/LoginPage";
@@ -21,7 +21,8 @@ function App() {
     return (
         <Router>
             <Routes>
-                <Route path="/" element={<LandingPage/>}/>
+                <Route path="/" element={isAuthenticated ? <Navigate to="/Dashbord" /> : <Navigate to="/landing" />} />
+                <Route path="/landing" element={<LandingPage/>}/>
                 <Route path="/signup" element={<SignupPage/>}/>
                 <Route path="/login" element={<LoginPage/>}/>
             </Routes>
