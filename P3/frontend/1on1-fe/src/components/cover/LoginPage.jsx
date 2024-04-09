@@ -16,7 +16,7 @@ function LoginPage() {
         if (isAuthenticated && window.location.pathname !== "/dashboard") {
             // navigate("/dashboard");
         }
-    }, [isAuthenticated]);
+    }, []);
 
 
     return (

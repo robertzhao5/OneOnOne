@@ -15,6 +15,27 @@ axios.interceptors.request.use(
   }
 );
 
+axios.interceptors.response.use(response => response, async error => {
+    const originalRequest = error.config;
+    // Check if the error is due to an expired token
+    if (error.response.status === 401 && !originalRequest._retry) {
+        originalRequest._retry = true;
+        const data = await refreshToken();
+        localStorage.setItem('accessToken', data.access);
+        // Update the token on the original request and resend it
+        axios.defaults.headers.common['Authorization'] = `Bearer ${data.access}`;
+        originalRequest.headers['Authorization'] = `Bearer ${data.access}`;
+        return axios(originalRequest);
+    }
+    return Promise.reject(error);
+});
+
+async function refreshToken() {
+    const refreshToken = localStorage.getItem('refreshToken');
+    const response = await axios.post('http://example.com/api/auth/refresh/', { refresh: refreshToken });
+    return response.data;
+}
+
 
 export const verifyToken = async () => {
     const token = localStorage.getItem('accessToken');
@@ -33,7 +54,8 @@ export const verifyToken = async () => {
 };
 
 export const ProtectedRoute = ({ isAuthenticated, children }) => {
-    if (!isAuthenticated && window.location.pathname !== '/login') {
+    const authenticated = verifyToken();
+    if (!authenticated && window.location.pathname !== '/login') {
         // Redirect to the login page or landing page if not authenticated
         console.log('navigated back');
         // return <Navigate to="/login" />;

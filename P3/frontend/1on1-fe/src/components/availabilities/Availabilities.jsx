@@ -18,7 +18,8 @@ function Availabilities() {
         return date;
     }));
 
-    const [timeSlots, setTimeSlots] = useState([]);
+    const [timeSlots, setTimeSlots] = useState(
+[]);
 
 
     const handleSave = async () => {
@@ -53,6 +54,7 @@ function Availabilities() {
                     const response = await axios.get(`contacts/api/availabilities/${userId}/`);
                     if (response.data) {
                         let resTimeSlots = convertToTimeSlots(response.data);
+                        console.log(resTimeSlots);
                         setTimeSlots(resTimeSlots);
                     }
                 } catch (error) {
@@ -82,6 +84,7 @@ function Availabilities() {
                     slotWidth={120}
                     slotHeight={10}
                     timeUnit={15}
+                    selectedSlotColor={"#90EE90"}
                 />
                 <Button onClick={handleSave} className="mt-3">Save Availabilities</Button>
             </div>
