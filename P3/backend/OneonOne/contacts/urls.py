@@ -1,6 +1,7 @@
 from django.urls import path
 from .views import (ListContactsView, AddContactView, RemoveContactView,
-                    RemindContact, ContactDetailView, UpdateContactAvailabilityView)
+                    RemindContact, ContactDetailView, UpdateContactAvailabilityView,
+                    UserAvailabilitiesView)
 
 urlpatterns = [
     path('list-contacts/', ListContactsView.as_view(), name='list_contacts'),

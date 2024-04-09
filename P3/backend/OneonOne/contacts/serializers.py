@@ -14,13 +14,6 @@ class UserContactSerializer(serializers.ModelSerializer):
         fields = ('id', 'user', 'contact', 'added_on')
 
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['id', 'username', 'email']
-
-
-
 class AvailabilitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Availability

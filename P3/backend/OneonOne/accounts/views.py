@@ -5,8 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import ChangePasswordSerializer, UserProfileSerializer, \
-    UserRegistrationSerializer
-from ..contacts.serializers import UserSerializer
+    UserRegistrationSerializer, UserSerializer
 
 
 # view for handing User Registrations
