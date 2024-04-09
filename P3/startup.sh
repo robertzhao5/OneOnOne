@@ -17,6 +17,10 @@ pip install djangorestframework-simplejwt
 # install react specific stuff
 npm install react-router-dom
 npm install bootstrap react-bootstrap
+npm install react-draggable-selector
+npm install react-redux
+npm install react-pro-sidebar
+
 
 
 echo "=============================================="
