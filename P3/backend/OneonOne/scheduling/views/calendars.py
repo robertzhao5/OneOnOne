@@ -13,7 +13,7 @@ from ..utils import send_invitation_email
 # Create your views here.
 class CalendarCreateView(APIView):
     permission_classes = [permissions.IsAuthenticated]
-    
+
     def post(self, request):
         serializer = CalendarSerializer(data=request.data)
         if serializer.is_valid():
@@ -21,13 +21,16 @@ class CalendarCreateView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class CalendarListView(APIView):
     serializer_class = CalendarSerializer
     permission_classes = [permissions.IsAuthenticated]
+
     def get(self, request):
         calendars = Calendar.objects.filter(owner=request.user)
         serializer = CalendarSerializer(calendars, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 class CalendarEditView(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -41,8 +44,10 @@ class CalendarEditView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class CalendarDeleteView(APIView):
     permission_classes = [permissions.IsAuthenticated]
+
     def delete(self, request, pk):
         user = request.user
         calendar = Calendar.objects.get(pk=pk)
@@ -68,7 +73,8 @@ class AcceptCalendarInviteView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, invitation_id):
-        invitation = get_object_or_404(CalendarInvite, id=invitation_id, invitee=request.user)
+        invitation = get_object_or_404(CalendarInvite, id=invitation_id,
+                                       invitee=request.user)
         invitation.status = 'accepted'
         invitation.save()
         invitation.calendar.participants.add(request.user)

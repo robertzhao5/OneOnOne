@@ -15,6 +15,7 @@ import EventDetails from './components/EventDetails/EventDetails';
 import {AuthProvider} from './components/auth/AuthContext';
 
 import {verifyToken, ProtectedRoute} from "./utils/utils";
+import Calendars from "./components/calendar/Calendars";
 
 function App() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -53,6 +54,7 @@ function App() {
                            <Navigate to="/landing"/>}/>
                 <Route path="/dashboard" element={<ProtectedRoute
                     isAuthenticated={isAuthenticated}><Dashboard/></ProtectedRoute>}/>
+                <Route path="/calendars" element={<Calendars/>}/>
                 <Route path="/landing" element={<LandingPage/>}/>
                 <Route path="/contacts" element={<ListContacts/>}/>
                 <Route path="/signup" element={<SignupPage/>}/>
