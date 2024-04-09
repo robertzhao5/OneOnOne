@@ -1,16 +1,14 @@
-import React, {useEffect, useState} from 'react';
-import { Table, Modal, ModalHeader, ModalBody, ModalFooter, Button, Form, FormGroup, Label, Input } from 'reactstrap';
-import axios from 'axios';
-import Header from '../header/Header';
+import React from "react";
+import Header from "../header/Header";
 
 
-function EventDetail(){
+function Dashboard() {
 
-    return(
+    return (
         <div className="container py-5">
-           <Header/> 
+            <Header/>
         </div>
-        
-    );
+    )
 }
-export default EventDetail;
+
+export default Dashboard;
