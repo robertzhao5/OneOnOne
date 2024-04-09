@@ -99,8 +99,8 @@ export function convertToTimeSlots(availabilities) {
     return availabilities.map(availability => ({
         date: weekdayToDate[availability.day],
         day: weekdayToNumber[availability.day], // Use the adjusted weekday to number mapping
-        minTime: availability.start_time,
-        maxTime: availability.end_time,
+        minTime: availability.start_time.substring(0, 5),
+        maxTime: availability.end_time.substring(0, 5),
     }));
 }
 

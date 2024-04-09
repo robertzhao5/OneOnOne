@@ -6,42 +6,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {convertToAvailability, convertToTimeSlots, fetchUserId} from "../../utils/utils";
 import axios from "axios";
 import {Button} from "reactstrap";
+import AvailabilityList from "./AvailabilityList";
+import "../../styles/availability.css"
 
 const api = axios.create();
-
-// Add a response interceptor
-api.interceptors.response.use(
-    response => {
-        // If the request succeeds, we don't have to do anything and just return the response
-        return response;
-    },
-    error => {
-        const originalRequest = error.config;
-
-        // If the server responds with a 401 status (Unauthorized), try to refresh the token
-        if (error.response.status === 401 && !originalRequest._retry) {
-            originalRequest._retry = true;
-
-            return axios.post('/api/refresh', {refreshToken: localStorage.getItem('refreshToken')})
-                .then(res => {
-                    if (res.status === 200) {
-                        // Put the new token into the localStorage
-                        localStorage.setItem('accessToken', res.data.accessToken);
-
-                        // Change the authorization header
-                        axios.defaults.headers.common['Authorization'] = 'Bearer ' + res.data.accessToken;
-
-                        // And finally re-send the original request
-                        originalRequest.headers['Authorization'] = 'Bearer ' + res.data.accessToken;
-                        return api(originalRequest);
-                    }
-                });
-        }
-
-        // If the request fails, we throw the error to the catch block
-        return Promise.reject(error);
-    }
-);
 
 function Availabilities() {
 
@@ -52,14 +20,8 @@ function Availabilities() {
         date.setDate(startDay.getDate() + i);
         return date;
     }));
-    let initialState = [{
-        "date": "20240102",
-        "day": 2,
-        "minTime": "15:15",
-        "maxTime": "15:30"
-    }]
-    const [timeSlots, setTimeSlots] = useState(
-        initialState);
+    const [timeSlots, setTimeSlots] = useState([]);
+    const [savedSlots, setSavedSlots] = useState([]);
 
 
     const handleSave = async () => {
@@ -80,6 +42,7 @@ function Availabilities() {
                 }
             });
             console.log("Availability updated successfully:", response.data);
+            setSavedSlots(timeSlots);
         } catch (error) {
             console.error("Error saving availabilities:", error.response ? error.response.data : error);
         }
@@ -95,8 +58,9 @@ function Availabilities() {
                     if (response.data) {
                         let resTimeSlots = convertToTimeSlots(response.data);
                         // console.log(resTimeSlots);
-                        // setTimeSlots(resTimeSlots);
-                        console.log("right now", timeSlots);
+                        setTimeSlots([...resTimeSlots]);
+                        setSavedSlots([...resTimeSlots]);
+                        console.log("time slots", timeSlots);
                     }
                 } catch (error) {
                     console.error("Error fetching availabilities:", error);
@@ -108,38 +72,38 @@ function Availabilities() {
     }, []);
 
     useEffect(() => {
-        function periodicallyTriggeredFunction() {
-            console.log(timeSlots)
-        }
-
-        // Set up the interval
-        const intervalId = setInterval(periodicallyTriggeredFunction, 200000); // 5000ms = 5 seconds
-
-        // Clean-up function to clear the interval when the component unmounts
-        return () => clearInterval(intervalId);
-    }, []); // Empty dependency array means this effect runs only once after the initial render
+        console.log("time slots updated", timeSlots);
+    }, [timeSlots]); // This effect runs whenever `timeSlots` changes.
 
 
     return (
         <div className="container py-5">
             <Header/>
-            <div
-                className="d-flex flex-column justify-content-center align-items-center  w-100 h-100 mt-5">
-                <h1 className="fw-bold fs-1 mb-3">Select Your Availabilities below</h1>
-                <DraggableSelector
-                    minTime={8}              // required
-                    maxTime={21}             // required
-                    dates={dates}            // required, required default: []
-                    timeSlots={timeSlots}       // required, required default: []
-                    setTimeSlots={setTimeSlots}  // required
-                    maxWidth="100%"
-                    maxHeight="100%"
-                    slotWidth={120}
-                    slotHeight={10}
-                    timeUnit={15}
-                    selectedSlotColor={"#90EE90"}
-                />
-                <Button onClick={handleSave} className="mt-3">Save Availabilities</Button>
+            <div className="d-flex flex-column align-items-center w-100 mt-5">
+                <h1 className="main-head fw-bold fs-1 mb-3">Select Your Availabilities</h1>
+                <div className="d-flex justify-content-around align-items-start w-100">
+                    <div
+                        className="d-flex flex-column justify-content-center align-items-center">
+                        <DraggableSelector
+                            minTime={8}              // required
+                            maxTime={19}             // required
+                            dates={dates}            // required, required default: []
+                            timeSlots={timeSlots}    // required, required default: []
+                            setTimeSlots={setTimeSlots} // required
+                            maxWidth="100%"
+                            maxHeight="100%"
+                            slotWidth={80}
+                            slotHeight={10}
+                            timeUnit={15}
+                            selectedSlotColor={"#90EE90"}
+                        />
+                        <Button onClick={handleSave} className="mt-3">Save
+                            Availabilities</Button>
+                    </div>
+                    <div className="ms-1 w-100"> {/* Add a margin to the left for spacing */}
+                        <AvailabilityList timeslots={savedSlots}/>
+                    </div>
+                </div>
             </div>
         </div>
     );
