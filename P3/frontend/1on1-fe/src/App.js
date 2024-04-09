@@ -8,9 +8,9 @@ import SignupPage from "./components/cover/SignupPage";
 import LoginPage from "./components/cover/LoginPage";
 import AboutPage from "./components/cover/AboutPage";
 import Suggestion from "./components/calendar/suggest";
-import Availabilities from "./components/availabilities/availabilities";
+import Availabilities from "./components/availabilities/Availabilities";
 import ListContacts from './components/contacts/ListContact';
-import Dashboard from "./components/dashboard/dashboard";
+import Dashboard from "./components/dashboard/Dashboard";
 import {AuthProvider} from './components/auth/AuthContext';
 
 import {verifyToken, ProtectedRoute} from "./utils/utils";
@@ -48,7 +48,7 @@ function App() {
         <Router>
             <Routes>
                 <Route path="/"
-                       element={authenticated ? <Navigate to="/dashboard"/> :
+                       element={isAuthenticated ? <Navigate to="/dashboard"/> :
                            <Navigate to="/landing"/>}/>
                 <Route path="/dashboard" element={<ProtectedRoute
                     isAuthenticated={isAuthenticated}><Dashboard/></ProtectedRoute>}/>

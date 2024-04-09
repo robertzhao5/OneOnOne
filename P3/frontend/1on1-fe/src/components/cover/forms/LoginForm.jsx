@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import {Link, useNavigate} from 'react-router-dom';
 import logo from '../../../assets/images/logo.png';
 import axios from "axios";
+import {fetchUserId} from "../../../utils/utils";
 
 
 function LoginForm() {
@@ -48,6 +49,9 @@ function LoginForm() {
             // save to local store
             localStorage.setItem('accessToken', response.data.access);
             localStorage.setItem('refreshToken', response.data.refresh);
+            localStorage.setItem('username', userData.username)
+            const userId = await fetchUserId(userData.username);
+            localStorage.setItem('userId', userId);
 
             // navigate to user dashboard
             navigate('/dashboard');

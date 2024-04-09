@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import {Link, useNavigate} from 'react-router-dom';
 import logo from '../../../assets/images/logo.png';
 import axios from "axios";
+import {fetchUserId} from "../../../utils/utils";
 
 
 function RegistrationForm() {
@@ -46,8 +47,15 @@ function RegistrationForm() {
         if (Object.keys(validationErrors).length > 0) return;
 
         try {
-            const response = await axios.post('accounts/api/register/', userData)
-            console.log('Account created', response.data);
+            const regResponse = await axios.post('accounts/api/register/', userData)
+            console.log('Account created', regResponse.data);
+
+            const logResponse = await axios.post('/api/token/', userData)
+            localStorage.setItem('accessToken', logResponse.data.access);
+            localStorage.setItem('refreshToken', logResponse.data.refresh);
+            localStorage.setItem('username', userData.username)
+            const userId = await fetchUserId(userData.username);
+            localStorage.setItem('userId', userId);
             // nav to user dashboard
             navigate('/dashboard');
 

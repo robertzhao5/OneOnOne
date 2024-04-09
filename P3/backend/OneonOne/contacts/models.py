@@ -27,7 +27,7 @@ class Availability(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     start_time = models.TimeField()
     end_time = models.TimeField()
-    day = models.DateField()
+    day = models.CharField(max_length=12)
     rank = models.IntegerField()
 
     def clean(self):

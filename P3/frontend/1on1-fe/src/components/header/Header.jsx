@@ -13,6 +13,8 @@ function Header() {
             // Signout logic
             localStorage.removeItem('accessToken'); // Clear access token
             localStorage.removeItem('refreshToken'); // Clear refresh token
+            localStorage.removeItem('username');
+            localStorage.removeItem('userId');
             navigate('/landing'); // Redirect to landing page after sign out
         } catch (error) {
             console.error('Error signing out:', error);

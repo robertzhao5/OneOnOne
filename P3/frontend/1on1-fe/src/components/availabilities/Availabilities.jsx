@@ -3,6 +3,9 @@ import Header from "../header/Header";
 import {DraggableSelector} from "react-draggable-selector";
 import "../../styles/font.css"
 import 'bootstrap/dist/css/bootstrap.min.css';
+import {convertToAvailability, convertToTimeSlots, fetchUserId} from "../../utils/utils";
+import axios from "axios";
+import {Button} from "reactstrap";
 
 
 function Availabilities() {
@@ -15,7 +18,51 @@ function Availabilities() {
         return date;
     }));
 
-    const [times, setTimes] = useState([]);
+    const [timeSlots, setTimeSlots] = useState([]);
+
+
+    const handleSave = async () => {
+        console.log("Saving time slots:", timeSlots);
+        // convert to expected format
+        const availabilityData = timeSlots.map(slot => convertToAvailability(slot));
+
+        const payload = {
+            availability: availabilityData
+        };
+        console.log(availabilityData);
+
+        try {
+            const response = await axios.post('contacts/update-availability/', payload, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            console.log("Availability updated successfully:", response.data);
+        } catch (error) {
+            console.error("Error saving availabilities:", error.response ? error.response.data : error);
+        }
+    };
+
+
+    useEffect(() => {
+        const fetchAvailabilities = async () => {
+            const userId = localStorage.getItem("userId");
+            if (userId) {
+                try {
+                    const response = await axios.get(`contacts/api/availabilities/${userId}/`);
+                    if (response.data) {
+                        let resTimeSlots = convertToTimeSlots(response.data);
+                        setTimeSlots(resTimeSlots);
+                    }
+                } catch (error) {
+                    console.error("Error fetching availabilities:", error);
+                }
+            }
+        };
+        fetchAvailabilities().then(r => console.log(r));
+
+    }, []);
 
 
     return (
@@ -28,17 +75,19 @@ function Availabilities() {
                     minTime={8}              // required
                     maxTime={21}             // required
                     dates={dates}            // required, required default: []
-                    timeSlots={times}        // required, required default: []
-                    setTimeSlots={setTimes}  // required
+                    timeSlots={timeSlots}        // required, required default: []
+                    setTimeSlots={setTimeSlots}  // required
                     maxWidth="100%"
                     maxHeight="100%"
                     slotWidth={120}
                     slotHeight={10}
                     timeUnit={15}
                 />
+                <Button onClick={handleSave} className="mt-3">Save Availabilities</Button>
             </div>
         </div>
     );
 }
 
 export default Availabilities;
+
