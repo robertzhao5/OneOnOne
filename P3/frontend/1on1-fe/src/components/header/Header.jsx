@@ -1,8 +1,23 @@
-import React, {useEffect} from 'react';
+import React, { useEffect, useState } from 'react';
 import '../../styles/main-header.css';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 
 function Header() {
+
+    const [showModal, setShowModal] = useState(false);
+    const navigate = useNavigate();
+
+    const handleSignOut = async () => {
+        try {
+            // Signout logic
+            localStorage.removeItem('authToken'); // Clear token
+            navigate('/landing'); // Redirect to landing page after sign out
+        } catch (error) {
+            console.error('Error signing out:', error);
+        }
+    };
+
     useEffect(() => {
         // Add Bootstrap styling to the body element
         document.body.classList.add("d-flex", "h-100", "text-center", "text-bg-dark");
@@ -32,10 +47,24 @@ function Header() {
                     <NavLink
                         className={({isActive}) => "nav-link fw-bold py-1 px-0" + (isActive ? " active" : "")}
                         to="/contacts">Contacts</NavLink>
-                    <a className="nav-link fw-bold py-1 px-0" href="#"
-                       data-bs-toggle="modal" data-bs-target="#signOutModal">Sign out</a>
+                    <NavLink 
+                        className="nav-link fw-bold py-1 px-0" 
+                        to="#" 
+                        onClick={() => setShowModal(true)}>Sign out</NavLink>
                 </nav>
             </div>
+            {showModal && ( // Show signout confirmation model
+            <Modal isOpen={showModal} toggle={() => setShowModal(false)}>
+                <ModalHeader toggle={() => setShowModal(false)}>Confirm Sign Out</ModalHeader>
+                <ModalBody>
+                    Are you sure you want to sign out?
+                </ModalBody>
+                <ModalFooter>
+                    <Button color="secondary" onClick={() => setShowModal(false)}>Cancel</Button>
+                    <Button color="primary" onClick={handleSignOut}>Sign Out</Button>
+                </ModalFooter>
+            </Modal>
+            )}
         </header>
     );
 }
