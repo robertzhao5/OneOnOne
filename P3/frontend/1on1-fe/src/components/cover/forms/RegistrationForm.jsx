@@ -39,14 +39,14 @@ function RegistrationForm() {
         if (!userData.username) validationErrors.username = 'Username is required.';
         if (!userData.email) validationErrors.email = 'Email is required.';
         if (!userData.password) validationErrors.password = 'Password is required.';
-        if (userData.password !== userData.confirmPassword) validationErrors.confirmPassword = 'Passwords do not match.';
+        if (userData.password !== userData.confirm_password) validationErrors.confirm_password = 'Passwords do not match.';
 
         // stop submission if errors exist
         setErrors(validationErrors);
         if (Object.keys(validationErrors).length > 0) return;
 
         try {
-            const response = await axios.post('/api/register/', userData)
+            const response = await axios.post('accounts/api/register/', userData)
             console.log('Account created', response.data);
         } catch (error) {
             console.error('Registration Error', error.response.data);
@@ -134,7 +134,7 @@ function RegistrationForm() {
 
             <div className="form-floating">
                 <input
-                    className={`form-control ${errors.confirmPassword ? 'is-invalid' : ''}`}
+                    className={`form-control ${errors.confirm_password ? 'is-invalid' : ''}`}
                     id="floatingConfirmPassword"
                     type="password"
                     name="confirm_password"
@@ -144,7 +144,7 @@ function RegistrationForm() {
                     required
                 />
                 <label htmlFor="floatingConfirmPassword">Confirm Password</label>
-                {errors.confirmPassword && <div className="invalid-feedback">{errors.confirmPassword}</div>}
+                {errors.confirm_password && <div className="invalid-feedback">{errors.confirm_password}</div>}
             </div>
 
             <div className="form-check text-start my-3">

@@ -41,8 +41,13 @@ function LoginForm() {
 
 
         try {
-            const response = await axios.post('/api/register/', userData)
+            const response = await axios.post('/api/token/', userData)
             console.log('Logged in', response.data);
+
+            // save to local store
+            localStorage.setItem('accessToken', response.data.access);
+            localStorage.setItem('refreshToken', response.data.refresh);
+
         } catch (error) {
             console.error('Login Error', error.response.data);
         }

@@ -8,6 +8,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import LandingPage from './components/cover/landing/LandingPage';
 import SignupPage from "./components/cover/SignupPage";
 import LoginPage from "./components/cover/LoginPage";
+import AboutPage from "./components/cover/AboutPage";
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
                 <Route path="/landing" element={<LandingPage/>}/>
                 <Route path="/signup" element={<SignupPage/>}/>
                 <Route path="/login" element={<LoginPage/>}/>
+                <Route path="/about" element={<AboutPage/>}/>
             </Routes>
         </Router>
     );
