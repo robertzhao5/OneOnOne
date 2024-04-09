@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import logo from '../../../assets/images/logo.png';
 import axios from "axios";
 
@@ -13,8 +13,8 @@ function RegistrationForm() {
         first_name: '',
         last_name: '',
     });
-
     const [errors, setErrors] = useState({});
+    const navigate = useNavigate();
 
     const handleChange = e => {
         const {name, value} = e.target;
@@ -48,6 +48,9 @@ function RegistrationForm() {
         try {
             const response = await axios.post('accounts/api/register/', userData)
             console.log('Account created', response.data);
+            // nav to user dashboard
+            navigate('/dashboard');
+
         } catch (error) {
             console.error('Registration Error', error.response.data);
         }

@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import logo from '../../../assets/images/logo.png';
 import axios from "axios";
 
@@ -9,6 +9,7 @@ function LoginForm() {
         username: '',
         password: '',
     });
+    const navigate = useNavigate();
 
     const [errors, setErrors] = useState({});
 
@@ -48,6 +49,8 @@ function LoginForm() {
             localStorage.setItem('accessToken', response.data.access);
             localStorage.setItem('refreshToken', response.data.refresh);
 
+            // navigate to user dashboard
+            navigate('/dashboard');
         } catch (error) {
             console.error('Login Error', error.response.data);
         }

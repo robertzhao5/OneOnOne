@@ -8,9 +8,11 @@ import SignupPage from "./components/cover/SignupPage";
 import LoginPage from "./components/cover/LoginPage";
 import AboutPage from "./components/cover/AboutPage";
 import Suggestion from "./components/calendar/suggest";
-import {verifyToken} from "./utils/verifyToken";
-
+import Availabilities from "./components/availabilities/availabilities";
 import ListContacts from './components/contacts/ListContact';
+import Dashboard from "./components/dashboard/dashboard";
+
+import {verifyToken} from "./utils/verifyToken";
 
 function App() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -42,12 +44,14 @@ function App() {
             <Routes>
                 <Route path="/" element={isAuthenticated ? <Navigate to="/dashboard"/> :
                     <Navigate to="/landing"/>}/>
+                <Route path="/dashboard" element={<Dashboard/>}/>
                 <Route path="/landing" element={<LandingPage/>}/>
                 <Route path="/contacts" element={<ListContacts/>}/>
                 <Route path="/signup" element={<SignupPage/>}/>
                 <Route path="/login" element={<LoginPage/>}/>
                 <Route path="/about" element={<AboutPage/>}/>
                 <Route path="/suggestion" element={<Suggestion/>}/>
+                <Route path="/availabilities" element={<Availabilities/>}/>
             </Routes>
         </Router>
     );
