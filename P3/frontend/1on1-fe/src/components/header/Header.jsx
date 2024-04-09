@@ -11,7 +11,8 @@ function Header() {
     const handleSignOut = async () => {
         try {
             // Signout logic
-            localStorage.removeItem('authToken'); // Clear token
+            localStorage.removeItem('accessToken'); // Clear access token
+            localStorage.removeItem('refreshToken'); // Clear refresh token
             navigate('/landing'); // Redirect to landing page after sign out
         } catch (error) {
             console.error('Error signing out:', error);
