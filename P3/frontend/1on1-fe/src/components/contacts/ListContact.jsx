@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { Table, Modal, ModalHeader, ModalBody, ModalFooter, Button, Form, FormGroup, Label, Input } from 'reactstrap';
+import Header from '../header/Header';
 
 function ListContacts() {
     const [contacts, setContacts] = useState([]);    // State to store contacts data
@@ -64,84 +65,87 @@ function ListContacts() {
 
     return (
         <div className="container py-5">
-        <h2 className="mb-3 text-start">Contact List</h2>
-        <Table hover>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Invite to Meeting</th>
-              <th>Manage</th>
-            </tr>
-          </thead>
-          <tbody>
-            {/* Map contacts data here */}
-            {contacts.map(contact => (
-            <tr key={contact.email}>
-              <td>{contact.name}</td>
-              <td>{contact.email}</td>
-              <td>
-                <div className="form-check">
-                  <Input type="checkbox" className="form-check-input" id={`${contact.email.replace('@', '').replace('.', '')}Checkbox`} />
-                  <Label className="form-check-label" for={`${contact.email.replace('@', '').replace('.', '')}Checkbox`}></Label>
-                </div>
-              </td>
-              <td>
-                <Button color="secondary" size="sm">Edit</Button>{' '}
-                <Button color="danger" size="sm" onClick={() => handleDeleteContact(contact.email)}>Delete</Button>
-              </td>
-            </tr>
-          ))}
-          </tbody>
-        </Table>
-  
-        {/* Add Contact Modal */}
-        <Modal isOpen={addModalOpen} toggle={() => setAddModalOpen(!addModalOpen)}>
-          <ModalHeader toggle={() => setAddModalOpen(!addModalOpen)}>Add Contact</ModalHeader>
-          <ModalBody>
-            <Form>
-              <FormGroup>
-                <Label for="name">Name:</Label>
-                <Input type="text" id="name" value={name} onChange={(e) => setName(e.target.value)} required />
-              </FormGroup>
-              <FormGroup>
-                <Label for="email">Email:</Label>
-                <Input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-              </FormGroup>
-            </Form>
-          </ModalBody>
-          <ModalFooter>
-            <Button color="secondary" onClick={() => setAddModalOpen(!addModalOpen)}>Close</Button>
-            <Button color="primary" onClick={handleAddContact}>Add Contact</Button>
-          </ModalFooter>
-        </Modal>
-  
-        {/* Edit Contact Modal */}
-        <Modal isOpen={editModalOpen} toggle={() => setEditModalOpen(!editModalOpen)}>
-          <ModalHeader toggle={() => setEditModalOpen(!editModalOpen)}>Edit Contact</ModalHeader>
-          <ModalBody>
-            <Form>
-              <FormGroup>
-                <Label for="editName">Name:</Label>
-                <Input type="text" id="editName" value={name} onChange={(e) => setName(e.target.value)} required />
-              </FormGroup>
-              <FormGroup>
-                <Label for="editEmail">Email:</Label>
-                <Input type="email" id="editEmail" value={email} onChange={(e) => setEmail(e.target.value)} required />
-              </FormGroup>
-            </Form>
-          </ModalBody>
-          <ModalFooter>
-            <Button color="secondary" onClick={() => setEditModalOpen(!editModalOpen)}>Close</Button>
-            <Button color="primary" onClick={handleEditContact}>Save Changes</Button>
-          </ModalFooter>
-        </Modal>
-  
-        {/* Add, Delete Contact Buttons */}
-        <div className="mt-3">
-          <Button color="primary" className="float-right" onClick={() => setAddModalOpen(!addModalOpen)}>Add Contact</Button>
-          <Button color="primary" className="float-right" onClick={() => console.log('Send invitations')}>Invite Contacts</Button>
-          <Button color="primary" className="float-right">Contact Scheduling</Button>
+        <Header />
+        <div className="container py-5">
+            <h2 className="mb-3 text-start">Contact List</h2>
+            <Table hover>
+            <thead>
+                <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Invite to Meeting</th>
+                <th>Manage</th>
+                </tr>
+            </thead>
+            <tbody>
+                {/* Map contacts data here */}
+                {contacts.map(contact => (
+                <tr key={contact.email}>
+                <td>{contact.name}</td>
+                <td>{contact.email}</td>
+                <td>
+                    <div className="form-check">
+                    <Input type="checkbox" className="form-check-input" id={`${contact.email.replace('@', '').replace('.', '')}Checkbox`} />
+                    <Label className="form-check-label" for={`${contact.email.replace('@', '').replace('.', '')}Checkbox`}></Label>
+                    </div>
+                </td>
+                <td>
+                    <Button color="secondary" size="sm">Edit</Button>{' '}
+                    <Button color="danger" size="sm" onClick={() => handleDeleteContact(contact.email)}>Delete</Button>
+                </td>
+                </tr>
+            ))}
+            </tbody>
+            </Table>
+    
+            {/* Add Contact Modal */}
+            <Modal isOpen={addModalOpen} toggle={() => setAddModalOpen(!addModalOpen)}>
+            <ModalHeader toggle={() => setAddModalOpen(!addModalOpen)}>Add Contact</ModalHeader>
+            <ModalBody>
+                <Form>
+                <FormGroup>
+                    <Label for="name">Name:</Label>
+                    <Input type="text" id="name" value={name} onChange={(e) => setName(e.target.value)} required />
+                </FormGroup>
+                <FormGroup>
+                    <Label for="email">Email:</Label>
+                    <Input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                </FormGroup>
+                </Form>
+            </ModalBody>
+            <ModalFooter>
+                <Button color="secondary" onClick={() => setAddModalOpen(!addModalOpen)}>Close</Button>
+                <Button color="primary" onClick={handleAddContact}>Add Contact</Button>
+            </ModalFooter>
+            </Modal>
+    
+            {/* Edit Contact Modal */}
+            <Modal isOpen={editModalOpen} toggle={() => setEditModalOpen(!editModalOpen)}>
+            <ModalHeader toggle={() => setEditModalOpen(!editModalOpen)}>Edit Contact</ModalHeader>
+            <ModalBody>
+                <Form>
+                <FormGroup>
+                    <Label for="editName">Name:</Label>
+                    <Input type="text" id="editName" value={name} onChange={(e) => setName(e.target.value)} required />
+                </FormGroup>
+                <FormGroup>
+                    <Label for="editEmail">Email:</Label>
+                    <Input type="email" id="editEmail" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                </FormGroup>
+                </Form>
+            </ModalBody>
+            <ModalFooter>
+                <Button color="secondary" onClick={() => setEditModalOpen(!editModalOpen)}>Close</Button>
+                <Button color="primary" onClick={handleEditContact}>Save Changes</Button>
+            </ModalFooter>
+            </Modal>
+    
+            {/* Add, Delete Contact Buttons */}
+            <div className="mt-3">
+            <Button color="primary" className="float-right" onClick={() => setAddModalOpen(!addModalOpen)}>Add Contact</Button>
+            <Button color="primary" className="float-right" onClick={() => console.log('Send invitations')}>Invite Contacts</Button>
+            <Button color="primary" className="float-right">Contact Scheduling</Button>
+            </div>
         </div>
       </div>
     );
