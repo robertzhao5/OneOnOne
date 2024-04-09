@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { Table, Modal, ModalHeader, ModalBody, ModalFooter, Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import axios from 'axios';
+import {convertToAvailability, convertToTimeSlots, fetchUserId} from "../../utils/utils";
 import Header from '../header/Header';
 import {DraggableSelector} from "react-draggable-selector";
 
@@ -15,6 +16,26 @@ function Suggest() {
         return date;
     }));
     const [timeSlots, setTimeSlots] = useState([]);
+
+    useEffect(() => {
+        const fetchSuggestedCalendar = async () => {
+            const userId = localStorage.getItem("userId");
+            if (userId) {
+                try {
+                    const response = await axios.get(`calendar/generate-suggested-calendar/<int:calendar_id>/`);
+                    if (response.data) {
+                        let resTimeSlots = convertToTimeSlots(response.data);
+                        console.log(resTimeSlots);
+                        setTimeSlots(resTimeSlots);
+                    }}
+                     catch (error) {
+                        console.error("Error fetching suggested calendar:", error);
+                    }
+                }
+            
+        };
+    } , []);
+
     
     return (
         

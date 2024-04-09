@@ -120,3 +120,39 @@ export function convertToAvailability(timeSlot) {
 }
 
 
+// Create an axios instance
+const api = axios.create();
+
+// Add a response interceptor
+api.interceptors.response.use(
+  response => {
+    // If the request succeeds, we don't have to do anything and just return the response
+    return response;
+  },
+  error => {
+    const originalRequest = error.config;
+
+    // If the server responds with a 401 status (Unauthorized), try to refresh the token
+    if (error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      return axios.post('/refresh', { refreshToken: localStorage.getItem('refreshToken') })
+        .then(res => {
+          if (res.status === 200) {
+            // Put the new token into the localStorage
+            localStorage.setItem('accessToken', res.data.accessToken);
+
+            // Change the authorization header
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + res.data.accessToken;
+
+            // And finally re-send the original request
+            originalRequest.headers['Authorization'] = 'Bearer ' + res.data.accessToken;
+            return api(originalRequest);
+          }
+        });
+    }
+
+    // If the request fails, we throw the error to the catch block
+    return Promise.reject(error);
+  }
+);
