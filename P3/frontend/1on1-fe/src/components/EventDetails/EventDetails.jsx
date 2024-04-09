@@ -5,12 +5,12 @@ import Header from '../header/Header';
 
 
 function EventDetail(){
-    
+
     return(
         <div className="container py-5">
            <Header/> 
         </div>
         
-    )
+    );
 }
 export default EventDetail;
