@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import logo from '../../../assets/images/logo.png';
 import axios from "axios";
 
@@ -9,9 +9,12 @@ function RegistrationForm() {
         username: '',
         email: '',
         password: '',
+        confirm_password: '',
         first_name: '',
         last_name: '',
     });
+
+    const [errors, setErrors] = useState({});
 
     const handleChange = e => {
         const {name, value} = e.target;
@@ -19,10 +22,29 @@ function RegistrationForm() {
             ...prevState,
             [name]: value
         }));
+
+        // reset errors
+        if (errors[name]) {
+            setErrors(prevErrors => ({
+                ...prevErrors,
+                [name]: ''
+            }));
+        }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        let validationErrors = {};
+        if (!userData.username) validationErrors.username = 'Username is required.';
+        if (!userData.email) validationErrors.email = 'Email is required.';
+        if (!userData.password) validationErrors.password = 'Password is required.';
+        if (userData.password !== userData.confirmPassword) validationErrors.confirmPassword = 'Passwords do not match.';
+
+        // stop submission if errors exist
+        setErrors(validationErrors);
+        if (Object.keys(validationErrors).length > 0) return;
+
         try {
             const response = await axios.post('/api/register/', userData)
             console.log('Account created', response.data);
@@ -41,15 +63,17 @@ function RegistrationForm() {
 
             <div className="form-floating mt-3">
                 <input
-                    className="form-control"
+                    className={`form-control ${errors.username ? 'is-invalid' : ''}`}
                     id="floatingUsername"
                     type="text"
+                    name="username"
                     value={userData.username}
                     onChange={handleChange}
                     placeholder="username"
                     required
                 />
                 <label htmlFor="floatingUsername">Username</label>
+                {errors.username && <div className="invalid-feedback">{errors.username}</div>}
             </div>
 
             <div className="form-floating">
@@ -57,6 +81,7 @@ function RegistrationForm() {
                     className="form-control"
                     id="floatingFirst"
                     type="text"
+                    name="first_name"
                     value={userData.first_name}
                     onChange={handleChange}
                     placeholder="John"
@@ -69,6 +94,7 @@ function RegistrationForm() {
                     className="form-control"
                     id="floatingLast"
                     type="text"
+                    name="last_name"
                     value={userData.last_name}
                     onChange={handleChange}
                     placeholder="Doe"
@@ -78,41 +104,47 @@ function RegistrationForm() {
 
             <div className="form-floating">
                 <input
-                    className="form-control"
+                    className={`form-control ${errors.email ? 'is-invalid' : ''}`}
                     id="floatingInput"
                     type="email"
+                    name="email"
                     value={userData.email}
                     onChange={handleChange}
                     placeholder="name@example.com"
                     required
                 />
                 <label htmlFor="floatingInput">Email address</label>
+                {errors.email && <div className="invalid-feedback">{errors.email}</div>}
             </div>
 
             <div className="form-floating">
                 <input
-                    className="form-control"
+                    className={`form-control ${errors.password ? 'is-invalid' : ''}`}
                     id="floatingPassword"
                     type="password"
+                    name="password"
                     value={userData.password}
                     onChange={handleChange}
                     placeholder="Password"
                     required
                 />
                 <label htmlFor="floatingPassword">Password</label>
+                {errors.password && <div className="invalid-feedback">{errors.password}</div>}
             </div>
 
             <div className="form-floating">
                 <input
-                    className="form-control"
+                    className={`form-control ${errors.confirmPassword ? 'is-invalid' : ''}`}
                     id="floatingConfirmPassword"
                     type="password"
-                    value={userData.password}
+                    name="confirm_password"
+                    value={userData.confirm_password}
                     onChange={handleChange}
                     placeholder="Confirm Password"
                     required
                 />
                 <label htmlFor="floatingConfirmPassword">Confirm Password</label>
+                {errors.confirmPassword && <div className="invalid-feedback">{errors.confirmPassword}</div>}
             </div>
 
             <div className="form-check text-start my-3">

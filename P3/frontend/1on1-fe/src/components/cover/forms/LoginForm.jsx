@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import logo from '../../../assets/images/logo.png';
 import axios from "axios";
 
@@ -10,16 +10,36 @@ function LoginForm() {
         password: '',
     });
 
+    const [errors, setErrors] = useState({});
+
     const handleChange = e => {
         const {name, value} = e.target;
         setUserData(prevState => ({
             ...prevState,
             [name]: value
         }));
+
+        // reset errors
+        if (errors[name]) {
+            setErrors(prevErrors => ({
+                ...prevErrors,
+                [name]: ''
+            }));
+        }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        let validationErrors = {};
+        if (!userData.username) validationErrors.username = 'Username is required.';
+        if (!userData.password) validationErrors.password = 'Password is required.';
+
+        // stop submission if errors exist
+        setErrors(validationErrors);
+        if (Object.keys(validationErrors).length > 0) return;
+
+
         try {
             const response = await axios.post('/api/register/', userData)
             console.log('Logged in', response.data);
@@ -38,27 +58,31 @@ function LoginForm() {
 
             <div className="form-floating mt-3">
                 <input
-                    className="form-control"
+                    className={`form-control ${errors.username ? 'is-invalid' : ''}`}
                     id="floatingUsername"
                     type="text"
+                    name="username"
                     value={userData.username}
                     onChange={handleChange}
                     placeholder="username"
                     required
                 />
                 <label htmlFor="floatingUsername">Username</label>
+                {errors.username && <div className="invalid-feedback">{errors.username}</div>}
             </div>
 
             <div className="form-floating mb-3">
                 <input
-                    className="form-control"
+                    className={`form-control ${errors.password ? 'is-invalid' : ''}`}
                     id="floatingPassword"
                     type="password"
+                    name="password"
                     value={userData.password}
                     onChange={handleChange}
                     placeholder="Password"
                 />
                 <label htmlFor="floatingPassword">Password</label>
+                <div className="invalid-feedback">{errors.password}</div>
             </div>
 
             <button className="btn btn-primary w-100 py-2" type="submit">Log In</button>
