@@ -110,7 +110,7 @@ function RegistrationForm() {
                     onChange={handleChange}
                     placeholder="Doe"
                 />
-                <label htmlFor="floatingLast">First Name</label>
+                <label htmlFor="floatingLast">Last Name</label>
             </div>
 
             <div className="form-floating">
