@@ -7,6 +7,7 @@ import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LandingPage from './components/cover/landing/LandingPage';
 import SignupPage from "./components/cover/SignupPage";
+import LoginPage from "./components/cover/LoginPage";
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
             <Routes>
                 <Route path="/" element={<LandingPage/>}/>
                 <Route path="/signup" element={<SignupPage/>}/>
+                <Route path="/login" element={<LoginPage/>}/>
             </Routes>
         </Router>
     );
