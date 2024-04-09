@@ -42,7 +42,7 @@ function Suggest(){
             </div>
     </main>);
 }
-export default AboutContent;
+export default Suggest;
 {
 
     /*

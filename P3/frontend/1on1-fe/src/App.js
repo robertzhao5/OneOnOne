@@ -7,6 +7,7 @@ import LandingPage from './components/cover/landing/LandingPage';
 import SignupPage from "./components/cover/SignupPage";
 import LoginPage from "./components/cover/LoginPage";
 import AboutPage from "./components/cover/AboutPage";
+import Suggestion from "./components/calendar/suggest"; 
 
 import ListContacts from './components/contacts/ListContact';
 
@@ -37,6 +38,7 @@ function App() {
                 <Route path="/signup" element={<SignupPage/>}/>
                 <Route path="/login" element={<LoginPage/>}/>
                 <Route path="/about" element={<AboutPage/>}/>
+                <Route path="/suggestion" element={<Suggestion/>}/>
             </Routes>
         </Router>
     );
