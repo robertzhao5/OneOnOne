@@ -30,8 +30,9 @@ function App() {
     return (
         <Router>
             <Routes>
-                <Route path="/" element={isAuthenticated ? <Navigate to="/Dashbord"/> :
+                <Route path="/" element={isAuthenticated ? <Navigate to="/Dashboard"/> :
                     <Navigate to="/landing"/>}/>
+                <Route path="/landing" element={<LandingPage/>}/>
                 <Route path="/contacts" element={<ListContacts/>}/>
                 <Route path="/signup" element={<SignupPage/>}/>
                 <Route path="/login" element={<LoginPage/>}/>
