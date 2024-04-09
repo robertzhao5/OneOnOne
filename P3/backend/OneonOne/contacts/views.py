@@ -2,14 +2,16 @@ import datetime
 
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
-from rest_framework import status
+from django.shortcuts import get_object_or_404
+from rest_framework import permissions, status
 from rest_framework.generics import CreateAPIView, ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Availability, UserContact
-from .serializers import UserContactDetailSerializer, UserContactSerializer
+from .serializers import AvailabilitySerializer, UserContactDetailSerializer, \
+    UserContactSerializer
 
 from .utils import send_invitation_email, send_reminder_email
 
