@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { Table, Modal, ModalHeader, ModalBody, ModalFooter, Button, Form, FormGroup, Label, Input } from 'reactstrap';
+import Header from '../header/Header';
 
 function ListContacts() {
     const [contacts, setContacts] = useState([]);    // State to store contacts data
@@ -64,6 +65,7 @@ function ListContacts() {
 
     return (
         <div className="container py-5">
+        <Header />
         <h2 className="mb-3 text-start">Contact List</h2>
         <Table hover>
           <thead>

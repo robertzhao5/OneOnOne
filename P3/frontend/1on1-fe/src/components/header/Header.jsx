@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import '../../styles/main-header.css';
+import { NavLink } from 'react-router-dom';
 
 function Header() {
     useEffect(() => {
