@@ -1,19 +1,23 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import LoginForm from "./forms/LoginForm";
 import CoverHeader from "./CoverHeader";
 import Footer from "./CoverFooter";
 import '../../styles/login.css'
+import {verifyToken} from "../../utils/utils";
+import {Navigate, useNavigate} from "react-router-dom";
+import {useAuth} from "../auth/AuthContext";
 
 
 function LoginPage() {
-        useEffect(() => {
-        // add bootstrap classes to body on mount
-        document.body.classList.add("d-flex", "h-100", "text-center", "text-bg-dark");
-        // remove bt classes on unmount
-        return () => {
-            document.body.classList.remove("d-flex", "h-100", "text-center", "text-bg-dark");
+    const isAuthenticated = useAuth();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (isAuthenticated && window.location.pathname !== "/dashboard") {
+            // navigate("/dashboard");
         }
-    }, []); // empty dep so effect runs only once on mount
+    }, [isAuthenticated]);
+
 
     return (
         <div className="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">

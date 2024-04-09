@@ -11,8 +11,9 @@ import Suggestion from "./components/calendar/suggest";
 import Availabilities from "./components/availabilities/availabilities";
 import ListContacts from './components/contacts/ListContact';
 import Dashboard from "./components/dashboard/dashboard";
+import {AuthProvider} from './components/auth/AuthContext';
 
-import {verifyToken} from "./utils/verifyToken";
+import {verifyToken, ProtectedRoute} from "./utils/utils";
 
 function App() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -24,6 +25,7 @@ function App() {
 
         const checkAuth = async () => {
             const authStatus = await verifyToken();
+            console.log("checked")
             setIsAuthenticated(authStatus);
         }
         checkAuth().then(r => console.log(r));
@@ -32,7 +34,7 @@ function App() {
         return () => {
             document.body.classList.remove("d-flex", "h-100", "text-center", "text-bg-dark");
         };
-    }, []);
+    }, [isAuthenticated]);
 
     useEffect(() => {
         // set dark mode on html
@@ -40,20 +42,26 @@ function App() {
     }, []);
 
     return (
+        <AuthProvider>
         <Router>
             <Routes>
-                <Route path="/" element={isAuthenticated ? <Navigate to="/dashboard"/> :
-                    <Navigate to="/landing"/>}/>
-                <Route path="/dashboard" element={<Dashboard/>}/>
+                <Route path="/"
+                       element={isAuthenticated ? <Navigate to="/dashboard"/> :
+                           <Navigate to="/landing"/>}/>
+                <Route path="/dashboard" element={<ProtectedRoute
+                    isAuthenticated={isAuthenticated}><Dashboard/></ProtectedRoute>}/>
                 <Route path="/landing" element={<LandingPage/>}/>
                 <Route path="/contacts" element={<ListContacts/>}/>
                 <Route path="/signup" element={<SignupPage/>}/>
                 <Route path="/login" element={<LoginPage/>}/>
                 <Route path="/about" element={<AboutPage/>}/>
                 <Route path="/suggestion" element={<Suggestion/>}/>
-                <Route path="/availabilities" element={<Availabilities/>}/>
+                <Route path="/availabilities" element={<ProtectedRoute
+                    isAuthenticated={isAuthenticated}><Availabilities/></ProtectedRoute>}/>
             </Routes>
         </Router>
+        </AuthProvider>
+
     );
 }
 

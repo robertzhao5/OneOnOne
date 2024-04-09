@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {Navigate} from "react-router-dom";
 
 export const verifyToken = async () => {
     const token = localStorage.getItem('accessToken'); // Assuming the token is stored in localStorage
@@ -14,6 +15,14 @@ export const verifyToken = async () => {
         console.error("Token verification failed:", error);
         return false; // invalid token
     }
+};
+
+export const ProtectedRoute = ({ isAuthenticated, children }) => {
+    if (!isAuthenticated && window.location.pathname !== '/login') {
+        // Redirect to the login page or landing page if not authenticated
+        return <Navigate to="/login" />;
+    }
+    return children;
 };
 
 
