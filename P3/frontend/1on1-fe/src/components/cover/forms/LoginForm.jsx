@@ -51,6 +51,7 @@ function LoginForm() {
 
             // navigate to user dashboard
             navigate('/dashboard');
+            console.log('navigated')
         } catch (error) {
             console.error('Login Error', error.response.data);
         }

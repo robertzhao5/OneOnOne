@@ -20,6 +20,7 @@ export const verifyToken = async () => {
 export const ProtectedRoute = ({ isAuthenticated, children }) => {
     if (!isAuthenticated && window.location.pathname !== '/login') {
         // Redirect to the login page or landing page if not authenticated
+        console.log('navigated back');
         return <Navigate to="/login" />;
     }
     return children;

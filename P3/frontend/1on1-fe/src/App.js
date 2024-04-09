@@ -17,6 +17,7 @@ import {verifyToken, ProtectedRoute} from "./utils/utils";
 
 function App() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    let authenticated = false;
 
 
     useEffect(() => {
@@ -27,6 +28,7 @@ function App() {
             const authStatus = await verifyToken();
             console.log("checked")
             setIsAuthenticated(authStatus);
+            authenticated = authStatus
         }
         checkAuth().then(r => console.log(r));
 
@@ -34,7 +36,7 @@ function App() {
         return () => {
             document.body.classList.remove("d-flex", "h-100", "text-center", "text-bg-dark");
         };
-    }, [isAuthenticated]);
+    }, []);
 
     useEffect(() => {
         // set dark mode on html
@@ -46,7 +48,7 @@ function App() {
         <Router>
             <Routes>
                 <Route path="/"
-                       element={isAuthenticated ? <Navigate to="/dashboard"/> :
+                       element={authenticated ? <Navigate to="/dashboard"/> :
                            <Navigate to="/landing"/>}/>
                 <Route path="/dashboard" element={<ProtectedRoute
                     isAuthenticated={isAuthenticated}><Dashboard/></ProtectedRoute>}/>

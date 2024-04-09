@@ -48,9 +48,9 @@ function Header() {
                     <NavLink
                         className={({isActive}) => "nav-link fw-bold py-1 px-0" + (isActive ? " active" : "")}
                         to="/contacts">Contacts</NavLink>
-                    <NavLink 
-                        className="nav-link fw-bold py-1 px-0" 
-                        to="#" 
+                    <NavLink
+                        className={({isActive}) => "nav-link fw-bold py-1 px-0" + (isActive ? " active" : "")}
+                        to="#"
                         onClick={() => setShowModal(true)}>Sign out</NavLink>
                 </nav>
             </div>
