@@ -1,8 +1,6 @@
 import './App.css';
 // import bootstrap
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import LandingPage from './components/cover/landing/LandingPage';
@@ -11,8 +9,6 @@ import LoginPage from "./components/cover/LoginPage";
 import AboutPage from "./components/cover/AboutPage";
 
 import ListContacts from './components/contacts/ListContact';
-import Layout from './Layout';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 function App() {
 
