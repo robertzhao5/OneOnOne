@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { DayPilot, DayPilotCalendar, DayPilotNavigator } from "@daypilot/daypilot-lite-react";
+import { ButtonGroup, Modal, ModalHeader, ModalBody, ModalFooter, Button, InputGroup, InputGroupText, Input, Label, FormGroup, CustomInput }from 'reactstrap';
+
 // import "./CalendarStyles.css";
 
 const styles = {
@@ -14,36 +16,64 @@ const styles = {
   }
 };
 
-const Calendar = () => {
-  const calendarRef = useRef()
+const Calendar = ({ isOpen, toggle }) => {
+  const [modalOpen, setModalOpen] = useState(false);
+  const startDay = new Date('2024-01-01');
+    const [dates, setDates] = useState(Array.from({length: 5}, (_, i) => {
+        const date = new Date(startDay);
+        date.setDate(startDay.getDate() + i);
+        return date;
+    }));
+    const [timeSlots, setTimeSlots] = useState(
+        []);
 
-  const editEvent = async (e) => {
-    const dp = calendarRef.current.control;
-    const modal = await DayPilot.Modal.prompt("Update event text:", e.text());
-    if (!modal.result) { return; }
-    e.data.text = modal.result;
-    dp.events.update(e);
+    const [startTime, setStartTime] = useState('10:05 AM');
+    const [endTime, setEndTime] = useState('10:05 AM');
+    const [showAs, setShowAs] = useState('busy');
+    const [participant, setParticipant] = useState('');
+    const [participants, setParticipants] = useState([]);
+    const handleRemoveParticipant = (index) => {//TODO: refactor event details modals to calendar
+      const updatedParticipants = participants.filter((_, i) => i !== index);
+      setParticipants(updatedParticipants);
+    };
+    const [selectedOption, setSelectedOption] = useState('busy'); // Assuming 'busy' is the default selected option
+  
+  const handleOptionChange = (option) => {
+    setSelectedOption(option);
+  };
+  const handleAddParticipant = () => {
+    if (participant.trim() !== '') {
+      setParticipants([...participants, participant]);
+      setParticipant('');
+    }
   };
 
+  const calendarRef = useRef()
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  };
+  const handleSaveModal = () => {
+    // Handle saving event
+    console.log('Saving event:',startTime, endTime);
+    handleCloseModal();
+  };
+
+  const handleEventClick = (args) => {
+    const { start, end } = args.e.data;
+  
+  const startTime = start.toString("HH:mm");
+  const endTime = end.toString("HH:mm");
+
+  setStartTime(startTime);
+  setEndTime(endTime);
+    setModalOpen(true);
+  };
+  
   const [calendarConfig, setCalendarConfig] = useState({
     viewType: "Week",
     durationBarVisible: false,
     timeRangeSelectedHandling: "Enabled",
-    onTimeRangeSelected: async args => {
-      const dp = calendarRef.current.control;
-      const modal = await DayPilot.Modal.prompt("Create a new event:", "Event 1");
-      dp.clearSelection();
-      if (!modal.result) { return; }
-      dp.events.add({
-        start: args.start,
-        end: args.end,
-        id: DayPilot.guid(),
-        text: modal.result
-      });
-    },
-    onEventClick: async args => {
-      await editEvent(args.e);
-    },
+        
     contextMenu: new DayPilot.Menu({
       items: [
         {
@@ -56,12 +86,7 @@ const Calendar = () => {
         {
           text: "-"
         },
-        {
-          text: "Edit...",
-          onClick: async args => {
-            await editEvent(args.source);
-          }
-        }
+        
       ]
     }),
     onBeforeEventRender: args => {
@@ -157,10 +182,50 @@ const Calendar = () => {
       <div style={styles.main}>
         <DayPilotCalendar
           {...calendarConfig}
+          onTimeRangeSelected={(args) => handleEventClick(args)}
+          onEventClick={(args) => handleEventClick(args)}
           ref={calendarRef}
         />
       </div>
+      <Modal isOpen={modalOpen} toggle={handleCloseModal}>
+      <ModalHeader toggle={handleCloseModal}>Event detail</ModalHeader>
+      <ModalBody>
+        <h4>Meeting time</h4>
+        <FormGroup>
+          <Label>Starts:</Label>
+          <Input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} />
+        </FormGroup>
+        <FormGroup>
+          <Label>Ends:</Label>
+          <Input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} />
+        </FormGroup>
+        <h4>Show As</h4>
+        <ButtonGroup aria-label="Avail-non avail selector">
+      <Button color="danger" onClick={() => handleOptionChange('busy')} active={selectedOption === 'busy'}>Busy</Button>
+      <Button color="success" onClick={() => handleOptionChange('free')} active={selectedOption === 'free'}>Free</Button>
+    </ButtonGroup>
+        <h4>Participant</h4>
+        <InputGroup>
+          <InputGroupText>@</InputGroupText>
+          <Input value={participant} onChange={(e) => setParticipant(e.target.value)} placeholder="Username" />
+          <Button color="primary" onClick={handleAddParticipant}>Add</Button>
+        </InputGroup>
+        <ul className="list-group list-group-vertical">
+          {participants.map((participant, index) => (
+            <li key={index} className="list-group-item">
+              {participant}
+              <Button close onClick={() => handleRemoveParticipant(index)} />
+            </li>
+          ))}
+        </ul>
+      </ModalBody>
+      <ModalFooter>
+        <Button color="secondary" onClick={handleCloseModal}>Close</Button>
+        <Button color="primary" onClick={handleSaveModal}>Save</Button>
+      </ModalFooter>
+    </Modal>
     </div>
+    
   );
 }
 
