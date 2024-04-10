@@ -4,6 +4,7 @@ import axios from 'axios';
 import {convertToAvailability, convertToTimeSlots, fetchUserId} from "../../utils/utils";
 import Header from '../header/Header';
 import {DraggableSelector} from "react-draggable-selector";
+import Calendar from './calendar';
 
 
 const Suggest = ({ isOpen, toggle }) => {
@@ -29,9 +30,16 @@ const Suggest = ({ isOpen, toggle }) => {
       }
     };
   
+    useEffect(() => {
+      // Add Bootstrap styling to the body element
+      document.body.classList.add("d-flex", "h-100", "text-center", "text-bg-dark");
+      // Remove the added Bootstrap styling when the component unmounts
+      return () => {
+          document.body.classList.remove("d-flex", "h-100", "text-center", "text-bg-dark");
+      };
+  }, []);
 
-
-  const handleRemoveParticipant = (index) => {
+  const handleRemoveParticipant = (index) => {//TODO: refactor event details modals to calendar
     const updatedParticipants = participants.filter((_, i) => i !== index);
     setParticipants(updatedParticipants);
   };
@@ -64,44 +72,10 @@ const Suggest = ({ isOpen, toggle }) => {
     
     return (
         
-        <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column" id="sideBySide">
-            <Header />
-        <div class="d-flex flex-column flex-md-row p-4 gap-4 py-md-5 align-items-center justify-content-center">
-            <div class="d-flex flex-column flex-md-row p-4 gap-4 py-md-5 align-items-center justify-content-center">
-                <div class="calendarContainer">
-                <h2>suggested calendar</h2>
-                <DraggableSelector
-                    minTime={8}              // required
-                    maxTime={21}             // required
-                    dates={dates}            // required, required default: []
-                    timeSlots={timeSlots}        // required, required default: []
-                    setTimeSlots={setTimeSlots}  // required
-                    maxWidth="50%"
-                    maxHeight="100%"
-                    slotWidth={120}
-                    slotHeight={10}
-                    timeUnit={15}
-                    selectedSlotColor={"#90EE90"}
-                />
-                </div>
-                
-                <div class="calendar-group">
-                    <h2>your calendar</h2>
-                    <DraggableSelector
-                    minTime={8}              // required
-                    maxTime={21}             // required
-                    dates={dates}            // required, required default: []
-                    timeSlots={timeSlots}        // required, required default: []
-                    setTimeSlots={setTimeSlots}  // required
-                    maxWidth="50%"
-                    maxHeight="100%"
-                    slotWidth={120}
-                    slotHeight={10}
-                    timeUnit={15}
-                    selectedSlotColor={"#90EE90"}
-                />
-                </div>
-            </div>
+        <div className="container py-5">
+        <Header />
+        <div className="container py-5">
+        <Calendar dates={dates} timeSlots={timeSlots} />
         </div>
         <Modal isOpen={isOpen} toggle={toggle}>
       <ModalHeader toggle={toggle}>Event detail</ModalHeader>
