@@ -47,16 +47,13 @@ function Header() {
                     <NavLink
                         className={({isActive}) => "nav-link fw-bold py-1 px-0" + (isActive ? " active" : "")}
                         to="/availabilities">Availabilities</NavLink>
-                    <NavLink
-                        className={({isActive}) => "nav-link fw-bold py-1 px-0" + (isActive ? " active" : "")}
-                        to="/event-details">Event Details</NavLink>
+                    
                     <NavLink
                         className={({isActive}) => "nav-link fw-bold py-1 px-0" + (isActive ? " active" : "")}
                         to="/contacts">Contacts</NavLink>
-                    <NavLink
-                        className={({isActive}) => "nav-link fw-bold py-1 px-0" + (isActive ? " active" : "")}
-                        to="#"
-                        onClick={() => setShowModal(true)}>Sign out</NavLink>
+                    <button
+                        className="nav-link fw-bold py-1 px-0"                        
+                        onClick={() => setShowModal(true)}>Sign out</button>
                 </nav>
             </div>
             {showModal && ( // Show signout confirmation model
