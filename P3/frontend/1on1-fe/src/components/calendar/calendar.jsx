@@ -16,7 +16,7 @@ const styles = {
   }
 };
 
-const Calendar = ({ isOpen, toggle }) => {
+const Calendar = (calendar_id) => {
   const [modalOpen, setModalOpen] = useState(false);
   const startDay = new Date('2024-01-01');
     const [dates, setDates] = useState(Array.from({length: 5}, (_, i) => {
@@ -224,6 +224,7 @@ const Calendar = ({ isOpen, toggle }) => {
         <Button color="primary" onClick={handleSaveModal}>Save</Button>
       </ModalFooter>
     </Modal>
+    
     </div>
     
   );
