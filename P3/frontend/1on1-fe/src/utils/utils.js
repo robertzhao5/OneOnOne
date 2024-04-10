@@ -1,5 +1,6 @@
 import axios from 'axios';
 import {Navigate} from "react-router-dom";
+import {useState, useEffect} from "react";
 
 
 axios.interceptors.request.use(
@@ -53,13 +54,29 @@ export const verifyToken = async () => {
     }
 };
 
-export const ProtectedRoute = ({ isAuthenticated, children }) => {
-    const authenticated = verifyToken();
+export const ProtectedRoute =  ({ isAuthenticated, children }) => {
+    const [authenticated, setAuthenticated] = useState(null);
+
+    useEffect(() => {
+        const checkAuthentication = async () => {
+            const isAuthenticated = await verifyToken();
+            setAuthenticated(isAuthenticated);
+        };
+
+        checkAuthentication();
+    }, []);
+
+    if (authenticated === null) {
+        // If the authentication status is still being checked, you might want to render a loading indicator
+        return <div>Loading...</div>;
+    }
+
     if (!authenticated && window.location.pathname !== '/login') {
         // Redirect to the login page or landing page if not authenticated
         console.log('navigated back');
-        // return <Navigate to="/login" />;
+        return <Navigate to="/login" />;
     }
+
     return children;
 };
 
