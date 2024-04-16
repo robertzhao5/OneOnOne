@@ -6,10 +6,13 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import ChangePasswordSerializer, UserProfileSerializer, \
     UserRegistrationSerializer, UserSerializer
+from rest_framework.permissions import AllowAny
 
 
 # view for handing User Registrations
 class RegisterView(APIView):
+    permission_classes = [AllowAny]
+
     def post(self, request):
         serializer = UserRegistrationSerializer(data=request.data)
         if serializer.is_valid():

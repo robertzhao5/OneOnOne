@@ -2,12 +2,18 @@ import axios from 'axios';
 import {Navigate} from "react-router-dom";
 import {useState, useEffect} from "react";
 
+let isRefreshing = false;
+let refreshSubscribers = [];
 
 axios.interceptors.request.use(
   config => {
-    const token = localStorage.getItem('accessToken');
-    if (token) {
-      config.headers['Authorization'] = 'Bearer ' + token;
+    // Exclude specific routes from automatic token addition
+    const noAuthNeeded = ['/api/register/', '/api/token/'];
+    if (!noAuthNeeded.some(url => config.url.includes(url))) {
+      const token = localStorage.getItem('accessToken');
+      if (token) {
+        config.headers['Authorization'] = `Bearer ${token}`;
+      }
     }
     return config;
   },
@@ -16,23 +22,54 @@ axios.interceptors.request.use(
   }
 );
 
-axios.interceptors.response.use(response => response, async error => {
+
+function subscribeToRefresh(cb) {
+    refreshSubscribers.push(cb);
+}
+
+function onTokenRefreshed(accessToken) {
+    refreshSubscribers.forEach(callback => callback(accessToken));
+    refreshSubscribers = [];
+}
+
+axios.interceptors.response.use(async (response) => {
+    return response;
+}, async (error) => {
     const originalRequest = error.config;
-    // Check if the error is due to an expired token
     if (error.response.status === 401 && !originalRequest._retry) {
-        originalRequest._retry = true;
-        const data = await refreshToken();
-        localStorage.setItem('accessToken', data.access);
-        // Update the token on the original request and resend it
-        axios.defaults.headers.common['Authorization'] = `Bearer ${data.access}`;
-        originalRequest.headers['Authorization'] = `Bearer ${data.access}`;
-        return axios(originalRequest);
+        if (!isRefreshing) {
+            isRefreshing = true;
+            originalRequest._retry = true;
+            try {
+                const data = await refreshToken();
+                localStorage.setItem('accessToken', data.access);
+                axios.defaults.headers.common['Authorization'] = `Bearer ${data.access}`;
+                isRefreshing = false;
+                onTokenRefreshed(data.access);
+                return axios(originalRequest);
+            } catch (refreshError) {
+                isRefreshing = false;
+                return Promise.reject(refreshError);
+            }
+        } else {
+            return new Promise((resolve, reject) => {
+                subscribeToRefresh((accessToken) => {
+                    originalRequest.headers['Authorization'] = `Bearer ${accessToken}`;
+                    resolve(axios(originalRequest));
+                });
+            });
+        }
     }
     return Promise.reject(error);
 });
 
+
 async function refreshToken() {
     const refreshToken = localStorage.getItem('refreshToken');
+    if (!refreshToken) {
+        console.error("Refresh token is missing or invalid.");
+        return Promise.reject("No refresh token available");
+    }
     const response = await axios.post('api/token/refresh/', { refresh: refreshToken });
     return response.data;
 }

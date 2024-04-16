@@ -15,7 +15,7 @@ pip install djangorestframework django-cors-headers
 pip install djangorestframework-simplejwt
 
 # install react specific stuff
-npm install react-router-dom
+npm install react react-router-dom
 npm install bootstrap react-bootstrap
 npm install react-draggable-selector
 npm install react-redux
@@ -25,7 +25,7 @@ npm install react-pro-sidebar
 
 echo "=============================================="
 echo "running db migrations..."
-$manage_path="backend/OneonOne/manage.py"
+$manage_path "backend/OneonOne/manage.py"
 
 
 if [ -f "$manage_path" ]; then
