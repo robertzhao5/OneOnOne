@@ -40,6 +40,7 @@ axios.interceptors.response.use(async (response) => {
         if (!isRefreshing) {
             isRefreshing = true;
             originalRequest._retry = true;
+            console.log("....refreshing token....")
             try {
                 const data = await refreshToken();
                 localStorage.setItem('accessToken', data.access);
