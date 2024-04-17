@@ -124,9 +124,9 @@ function ListContacts() {
             <tbody>
                 {/* Map contacts data here */}
                 {contacts.map(contact => (
-                <tr key={contact.id}>
-                <td>{contact.first_name}</td>
-                <td>{contact.email}</td>
+                <tr key={contact.contact.id}>
+                <td>{contact.contact.username}</td>
+                <td>{contact.contact.email}</td>
                 <td className="text-center">
                     <div className="form-check d-flex justify-content-center">
                     <Input type="checkbox" className="form-check-input" id={`${contact.email}Checkbox`} />
@@ -141,7 +141,7 @@ function ListContacts() {
             ))}
             </tbody>
             </Table>
-    
+
             {/* Add Contact Modal */}
             <Modal isOpen={addModalOpen} toggle={() => setAddModalOpen(!addModalOpen)}>
             <ModalHeader toggle={() => setAddModalOpen(!addModalOpen)}>Add Contact</ModalHeader>
@@ -162,7 +162,7 @@ function ListContacts() {
                 <Button color="primary" onClick={handleAddContact}>Add Contact</Button>
             </ModalFooter>
             </Modal>
-    
+
             {/* Edit Contact Modal */}
             <Modal isOpen={editModalOpen} toggle={() => setEditModalOpen(!editModalOpen)}>
             <ModalHeader toggle={() => setEditModalOpen(!editModalOpen)}>Edit Contact</ModalHeader>
@@ -194,7 +194,7 @@ function ListContacts() {
                     <Button color="secondary" onClick={() => setInviteModalOpen(!inviteModalOpen)}>Close</Button>
                 </ModalFooter>
             </Modal>
-    
+
             {/* Add, Invite, Contact Buttons */}
             <div className="mt-3 d-flex">
             <Button color="primary" className="float-right me-2" onClick={() => setAddModalOpen(!addModalOpen)}>Add Contact</Button>
