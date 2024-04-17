@@ -35,9 +35,7 @@ const Suggest = ({isOpen, toggle}) => {
     []);
   const {calendarId} = useParams();
 
-  const [startTime, setStartTime] = useState('10:05 AM');
-  const [endTime, setEndTime] = useState('10:05 AM');
-  const [showAs, setShowAs] = useState('busy');
+
   const [participant, setParticipant] = useState('');
   const [participants, setParticipants] = useState([]);
 
@@ -60,10 +58,12 @@ const Suggest = ({isOpen, toggle}) => {
         response.data.proposed_meetings.forEach((meeting) => {
           slots.push({
             start: meeting.start,
-            end: meeting.end
+            end: meeting.end,
+            day: meeting.day,
           });
         });
         console.log(slots)
+        setTimeSlots(slots);
       } catch (error) {
         console.error("Error fetching suggested calendar:", error);
       }

@@ -14,7 +14,7 @@ const styles = {
   }
 };
 
-const Calendar = () => {
+const Calendar = ({Timeslot}) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [event, setEvent] = useState(null);
   const [eventText, setEventText] = useState('Event');
@@ -54,6 +54,38 @@ const handleAddParticipant = () => {
     // Here you can implement saving logic
     editEvent(event);
     handleCloseModal();
+  };
+
+  const convertDaytoPusdoDate = (day) => {
+    const weekdayToDate = {
+      "Monday": "2024-01-01",
+      "Tuesday": "2024-01-02",
+      "Wednesday": "2024-01-03",
+      "Thursday": "2024-01-04",
+      "Friday": "2024-01-05",
+      "Saturday": "2024-01-06",
+      "Sunday": "2024-01-07",
+    };
+    return weekdayToDate[day];
+  };
+
+  const populateEvents = async () => {
+    const dp = calendarRef.current.control;
+    dp.clearSelection();
+    for (let i = 0; i < Timeslot.length; i++) {
+      let day = Timeslot[i].day;
+
+      let newStartTime= new DayPilot.Date(convertDaytoPusdoDate(day)+"T"+Timeslot[i].start+":00");
+      let newEndTime = new DayPilot.Date(convertDaytoPusdoDate(day)+Timeslot[i].end+":00");
+      let newId= DayPilot.guid();
+      let newEvent = {
+        start: newStartTime,
+        end: newEndTime,
+        id: newId,
+        text: "",
+        participants: 0,
+      };
+  };
   };
 
   const editEvent = async (e) => {
