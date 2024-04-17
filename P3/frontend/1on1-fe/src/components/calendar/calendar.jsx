@@ -17,8 +17,10 @@ const styles = {
 const Calendar = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [event, setEvent] = useState(null);
+  const [eventText, setEventText] = useState('');
   const [startTime, setStartTime] = useState('10:00');
   const [endTime, setEndTime] = useState('11:00');
+  const [date, setDate] = useState("2024-01-01");
 
   const calendarRef = useRef();
 
@@ -30,18 +32,24 @@ const Calendar = () => {
     setEvent(args.e);
     setStartTime(args.e.data.start.toString("HH:mm"));
     setEndTime(args.e.data.end.toString("HH:mm"));
+    setEventText(args.e.data.text);
+    setDate(args.e.data.start.toString("yyyy-MM-dd"));
     setModalOpen(true);
   };
 
   const handleSaveModal = () => {
     // Here you can implement saving logic
+    editEvent(event);
     handleCloseModal();
   };
 
   const editEvent = async (e) => {
     const dp = calendarRef.current.control;
-    
-    
+    let newStartTime= new DayPilot.Date(date + "T" + startTime+":00");
+    let newEndTime = new DayPilot.Date(date + "T" + endTime+":00");
+    e.data.start = newStartTime;
+    e.data.end = newEndTime;
+    e.data.text = eventText;
     dp.events.update(e);
   };
   const [calendarConfig, setCalendarConfig] = useState({
@@ -159,7 +167,7 @@ const Calendar = () => {
         />
       </div>
       <Modal isOpen={modalOpen} toggle={handleCloseModal}>
-        <ModalHeader toggle={handleCloseModal}>Event Detail</ModalHeader>
+        <ModalHeader toggle={handleCloseModal}>Event Detail for {eventText}</ModalHeader>
         <ModalBody>
           <FormGroup>
             <Label>Start Time:</Label>
