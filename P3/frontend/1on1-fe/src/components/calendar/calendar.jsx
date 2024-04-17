@@ -17,10 +17,17 @@ const styles = {
 const Calendar = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [event, setEvent] = useState(null);
-  const [eventText, setEventText] = useState('');
+  const [eventText, setEventText] = useState('Event');
   const [startTime, setStartTime] = useState('10:00');
   const [endTime, setEndTime] = useState('11:00');
   const [date, setDate] = useState("2024-01-01");
+  const [participant, setParticipant] = useState('');
+    const [participants, setParticipants] = useState([]);
+    const handleRemoveParticipant = (index) => {//TODO: refactor event details modals to calendar
+      const updatedParticipants = participants.filter((_, i) => i !== index);
+      setParticipants(updatedParticipants);
+    };
+
 
   const calendarRef = useRef();
 
@@ -35,6 +42,12 @@ const Calendar = () => {
     setEventText(args.e.data.text);
     setDate(args.e.data.start.toString("yyyy-MM-dd"));
     setModalOpen(true);
+  };
+const handleAddParticipant = () => {
+    if (participant.trim() !== '') {
+      setParticipants([...participants, participant]);
+      setParticipant('');
+    }
   };
 
   const handleSaveModal = () => {
@@ -52,21 +65,24 @@ const Calendar = () => {
     e.data.text = eventText;
     dp.events.update(e);
   };
+
   const [calendarConfig, setCalendarConfig] = useState({
     viewType: "Week",
     durationBarVisible: false,
     timeRangeSelectedHandling: "Enabled",
     onTimeRangeSelected: async args => {
       const dp = calendarRef.current.control;
-      const modal = await DayPilot.Modal.prompt("Create a new event:", "Event 1");
       dp.clearSelection();
-      if (!modal.result) { return; }
-      dp.events.add({
+      const newEvent = {
         start: args.start,
         end: args.end,
         id: DayPilot.guid(),
-        text: modal.result
-      });
+        text: eventText,
+      };
+      let newId= newEvent.id;
+      dp.events.add(newEvent);
+      let e= dp.events.find(newId);
+      handleEventClick({e});
     },
     onEventClick: async args => {
       await editEvent(args.e);
@@ -146,8 +162,7 @@ const Calendar = () => {
         <DayPilotNavigator
           selectMode={"Week"}
           headerDateFormat="dddd"
-          startDate={"2024-01-01"}
-          selectionDay={"2024-01-01"}
+          
           onTimeRangeSelected={ args => {
             calendarRef.current.control.update({
               startDate: args.day
@@ -169,6 +184,8 @@ const Calendar = () => {
       <Modal isOpen={modalOpen} toggle={handleCloseModal}>
         <ModalHeader toggle={handleCloseModal}>Event Detail for {eventText}</ModalHeader>
         <ModalBody>
+          <label>Event Title:</label>
+          <Input value={eventText} onChange={(e) => setEventText(e.target.value)} />
           <FormGroup>
             <Label>Start Time:</Label>
             <Input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} />
@@ -177,6 +194,20 @@ const Calendar = () => {
             <Label>End Time:</Label>
             <Input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} />
           </FormGroup>
+          <h4>Participant</h4>
+        <InputGroup>
+          <InputGroupText>@</InputGroupText>
+          <Input value={participant} onChange={(e) => setParticipant(e.target.value)} placeholder="Username" />
+          <Button color="primary" onClick={handleAddParticipant}>Add</Button>
+        </InputGroup>
+        <ul className="list-group list-group-vertical">
+          {participants.map((participant, index) => (
+            <li key={index} className="list-group-item">
+              {participant}
+              <Button close onClick={() => handleRemoveParticipant(index)} />
+            </li>
+          ))}
+        </ul>
         </ModalBody>
         <ModalFooter>
           <Button color="secondary" onClick={handleCloseModal}>Close</Button>
