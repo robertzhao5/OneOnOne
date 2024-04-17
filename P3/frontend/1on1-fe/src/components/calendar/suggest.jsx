@@ -87,6 +87,11 @@ const Suggest = ({isOpen, toggle}) => {
     setSelectedOption(option);
   };
 
+  const handlePick = () => {
+    toggleToast();
+
+  }
+
   const [showToast, setShowToast] = useState(false);
 
   const toggleToast = () => {
@@ -103,7 +108,7 @@ const Suggest = ({isOpen, toggle}) => {
       </div>
       <Button color="primary" className="d-inline-flex align-items-center" type="button"
               id="liveAlertBtn"
-              data-bs-target="#calendarCarousel" onClick={toggleToast}>
+              data-bs-target="#calendarCarousel" onClick={handlePick}>
         Pick this one&nbsp;
         <BsArrowRight/>
       </Button>

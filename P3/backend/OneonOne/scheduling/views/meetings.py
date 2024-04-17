@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
 from rest_framework import status, permissions
 from rest_framework.response import Response
@@ -49,3 +50,15 @@ class MeetingDeleteView(APIView):
         meeting = Meetings.objects.get(pk=pk)
         meeting.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class UserMeetingsView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        meetings = Meetings.objects.filter(
+            Q(owner=user) | Q(participants=user)
+        ).distinct()  # Ensure unique entries if user is both owner and participant
+        serializer = MeetingSerializer(meetings, many=True)
+        return Response(serializer.data)

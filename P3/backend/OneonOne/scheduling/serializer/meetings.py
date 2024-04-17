@@ -6,7 +6,7 @@ from rest_framework import serializers
 class MeetingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Meetings
-        fields = ['id', 'name', 'start', 'end', 'owner', 'participants', 'calendar']
+        fields = ['id', 'name', 'start', 'end', 'owner', 'participants']
         read_only_fields = ['owner']
 
 class MeetingEditSerializer(serializers.Serializer):

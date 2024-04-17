@@ -4,6 +4,7 @@ from .views.calendars import (CalendarCreateView, CalendarListView,
                               CalendarDeleteView, InviteContactToCalendarView,
                               AcceptCalendarInviteView, ListCalendarInvitationsView,
                               ListSentInvitationsView)
+from .views.meetings import UserMeetingsView
 from .views.suggested_schedules import GenerateSuggestedSchedulesView
 
 urlpatterns = [
@@ -23,4 +24,7 @@ urlpatterns = [
     path('generate-suggested-schedules/<int:calendar_id>/',
          GenerateSuggestedSchedulesView.as_view(),
          name='generate_suggested_schedules'),
+    path('user-meetings/',
+         UserMeetingsView.as_view(),
+         name='user_meetings'),
 ]

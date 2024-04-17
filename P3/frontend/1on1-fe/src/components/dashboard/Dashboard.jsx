@@ -2,6 +2,7 @@ import React from "react";
 import Header from "../header/Header";
 import CalendarInvitations from "./CalendarInvitations";
 import SentInvitations from "./SentInvitations";
+import UpcomingMeetings from "./UpcomingMeetings";
 
 
 function Dashboard() {
@@ -11,6 +12,7 @@ function Dashboard() {
             <Header/>
           <CalendarInvitations/>
           <SentInvitations/>
+          <UpcomingMeetings/>
         </div>
     )
 }
