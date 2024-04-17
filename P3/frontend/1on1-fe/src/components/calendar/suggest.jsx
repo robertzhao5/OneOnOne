@@ -60,6 +60,7 @@ const Suggest = ({isOpen, toggle}) => {
             start: meeting.start,
             end: meeting.end,
             day: meeting.day,
+            participant: meeting.participant,
           });
         });
         console.log(slots)
@@ -76,7 +77,7 @@ const Suggest = ({isOpen, toggle}) => {
   }, [calendarId]);
 
 
-  const handleRemoveParticipant = (index) => {//TODO: refactor event details modals to calendar
+  const handleRemoveParticipant = (index) => {
     const updatedParticipants = participants.filter((_, i) => i !== index);
     setParticipants(updatedParticipants);
   };
@@ -86,24 +87,6 @@ const Suggest = ({isOpen, toggle}) => {
     setSelectedOption(option);
   };
 
-  useEffect(() => {
-    const fetchSuggestedCalendar = async () => {
-      const userId = localStorage.getItem("userId");
-      if (userId) {
-        try {
-          const response = await axios.get(`calendar/generate-suggested-calendar/<int:calendar_id>/`);
-          if (response.data) {
-            let resTimeSlots = convertToTimeSlots(response.data);
-            console.log(resTimeSlots);
-            setTimeSlots(resTimeSlots);
-          }
-        } catch (error) {
-          console.error("Error fetching suggested calendar:", error);
-        }
-      }
-
-    };
-  }, []);
   const [showToast, setShowToast] = useState(false);
 
   const toggleToast = () => {
@@ -116,7 +99,7 @@ const Suggest = ({isOpen, toggle}) => {
     <div className="container py-5">
       <Header/>
       <div className="container py-5">
-        <Calendar dates={dates} timeSlots={timeSlots}/>
+        <Calendar dates={dates} Timeslot={timeSlots}/>
       </div>
       <Button color="primary" className="d-inline-flex align-items-center" type="button"
               id="liveAlertBtn"

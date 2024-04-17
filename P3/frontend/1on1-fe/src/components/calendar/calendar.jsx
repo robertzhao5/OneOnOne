@@ -1,6 +1,22 @@
-import React, { useState, useRef } from 'react';
-import { DayPilot, DayPilotCalendar, DayPilotNavigator } from "@daypilot/daypilot-lite-react";
-import { ButtonGroup, Modal, ModalHeader, ModalBody, ModalFooter, Button, InputGroup, InputGroupText, Input, Label, FormGroup } from 'reactstrap';
+import React, {useState, useRef, useEffect} from 'react';
+import {
+  DayPilot,
+  DayPilotCalendar,
+  DayPilotNavigator
+} from "@daypilot/daypilot-lite-react";
+import {
+  ButtonGroup,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
+  InputGroup,
+  InputGroupText,
+  Input,
+  Label,
+  FormGroup
+} from 'reactstrap';
 
 const styles = {
   wrap: {
@@ -14,6 +30,8 @@ const styles = {
   }
 };
 
+let populated = false;
+
 const Calendar = ({Timeslot}) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [event, setEvent] = useState(null);
@@ -22,11 +40,11 @@ const Calendar = ({Timeslot}) => {
   const [endTime, setEndTime] = useState('11:00');
   const [date, setDate] = useState("2024-01-01");
   const [participant, setParticipant] = useState('');
-    const [participants, setParticipants] = useState([]);
-    const handleRemoveParticipant = (index) => {//TODO: refactor event details modals to calendar
-      const updatedParticipants = participants.filter((_, i) => i !== index);
-      setParticipants(updatedParticipants);
-    };
+  const [participants, setParticipants] = useState([]);
+  const handleRemoveParticipant = (index) => {//TODO: refactor event details modals to calendar
+    const updatedParticipants = participants.filter((_, i) => i !== index);
+    setParticipants(updatedParticipants);
+  };
 
 
   const calendarRef = useRef();
@@ -43,7 +61,7 @@ const Calendar = ({Timeslot}) => {
     setDate(args.e.data.start.toString("yyyy-MM-dd"));
     setModalOpen(true);
   };
-const handleAddParticipant = () => {
+  const handleAddParticipant = () => {
     if (participant.trim() !== '') {
       setParticipants([...participants, participant]);
       setParticipant('');
@@ -58,40 +76,52 @@ const handleAddParticipant = () => {
 
   const convertDaytoPusdoDate = (day) => {
     const weekdayToDate = {
-      "Monday": "2024-01-01",
-      "Tuesday": "2024-01-02",
-      "Wednesday": "2024-01-03",
-      "Thursday": "2024-01-04",
-      "Friday": "2024-01-05",
-      "Saturday": "2024-01-06",
-      "Sunday": "2024-01-07",
+      "Monday": "2024-04-15",
+      "Tuesday": "2024-04-16",
+      "Wednesday": "2024-04-17",
+      "Thursday": "2024-04-18",
+      "Friday": "2024-04-19",
+      "Saturday": "2024-04-20",
+      "Sunday": "2024-04-14",
     };
     return weekdayToDate[day];
   };
 
-  const populateEvents = async () => {
+  const populateEvents = () => {
     const dp = calendarRef.current.control;
     dp.clearSelection();
+    console.log(Timeslot)
+    console.log(populated)
     for (let i = 0; i < Timeslot.length; i++) {
+      populated = true;
       let day = Timeslot[i].day;
-
-      let newStartTime= new DayPilot.Date(convertDaytoPusdoDate(day)+"T"+Timeslot[i].start+":00");
-      let newEndTime = new DayPilot.Date(convertDaytoPusdoDate(day)+Timeslot[i].end+":00");
-      let newId= DayPilot.guid();
+      let participant = Timeslot[i].participant;
+      console.log(convertDaytoPusdoDate(day) + "T" + Timeslot[i].start);
+      const dayDate = convertDaytoPusdoDate(day);
+      let newStartTime = new DayPilot.Date(dayDate + "T" + Timeslot[i].start);
+      let newEndTime = new DayPilot.Date(dayDate + "T" + Timeslot[i].end);
+      let newId = DayPilot.guid();
       let newEvent = {
         start: newStartTime,
         end: newEndTime,
         id: newId,
-        text: "",
+        text: participant.username,
         participants: 0,
       };
+      dp.events.add(newEvent);
+    }
   };
-  };
+
+  useEffect(() => {
+    if (!populated) {
+      populateEvents();
+    }
+  }, [Timeslot]);
 
   const editEvent = async (e) => {
     const dp = calendarRef.current.control;
-    let newStartTime= new DayPilot.Date(date + "T" + startTime+":00");
-    let newEndTime = new DayPilot.Date(date + "T" + endTime+":00");
+    let newStartTime = new DayPilot.Date(date + "T" + startTime + ":00");
+    let newEndTime = new DayPilot.Date(date + "T" + endTime + ":00");
     e.data.start = newStartTime;
     e.data.end = newEndTime;
     e.data.text = eventText;
@@ -111,9 +141,9 @@ const handleAddParticipant = () => {
         id: DayPilot.guid(),
         text: eventText,
       };
-      let newId= newEvent.id;
+      let newId = newEvent.id;
       dp.events.add(newEvent);
-      let e= dp.events.find(newId);
+      let e = dp.events.find(newId);
       handleEventClick({e});
     },
     onEventClick: async args => {
@@ -187,15 +217,14 @@ const handleAddParticipant = () => {
   });
 
 
-
   return (
     <div style={styles.wrap}>
       <div style={styles.left}>
         <DayPilotNavigator
           selectMode={"Week"}
           headerDateFormat="dddd"
-          
-          onTimeRangeSelected={ args => {
+
+          onTimeRangeSelected={args => {
             calendarRef.current.control.update({
               startDate: args.day
             });
@@ -210,36 +239,39 @@ const handleAddParticipant = () => {
           {...calendarConfig}
           onEventClick={(args) => handleEventClick(args)}
           ref={calendarRef}
-          
+
         />
       </div>
       <Modal isOpen={modalOpen} toggle={handleCloseModal}>
         <ModalHeader toggle={handleCloseModal}>Event Detail for {eventText}</ModalHeader>
         <ModalBody>
           <label>Event Title:</label>
-          <Input value={eventText} onChange={(e) => setEventText(e.target.value)} />
+          <Input value={eventText} onChange={(e) => setEventText(e.target.value)}/>
           <FormGroup>
             <Label>Start Time:</Label>
-            <Input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} />
+            <Input type="time" value={startTime}
+                   onChange={(e) => setStartTime(e.target.value)}/>
           </FormGroup>
           <FormGroup>
             <Label>End Time:</Label>
-            <Input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} />
+            <Input type="time" value={endTime}
+                   onChange={(e) => setEndTime(e.target.value)}/>
           </FormGroup>
           <h4>Participant</h4>
-        <InputGroup>
-          <InputGroupText>@</InputGroupText>
-          <Input value={participant} onChange={(e) => setParticipant(e.target.value)} placeholder="Username" />
-          <Button color="primary" onClick={handleAddParticipant}>Add</Button>
-        </InputGroup>
-        <ul className="list-group list-group-vertical">
-          {participants.map((participant, index) => (
-            <li key={index} className="list-group-item">
-              {participant}
-              <Button close onClick={() => handleRemoveParticipant(index)} />
-            </li>
-          ))}
-        </ul>
+          <InputGroup>
+            <InputGroupText>@</InputGroupText>
+            <Input value={participant} onChange={(e) => setParticipant(e.target.value)}
+                   placeholder="Username"/>
+            <Button color="primary" onClick={handleAddParticipant}>Add</Button>
+          </InputGroup>
+          <ul className="list-group list-group-vertical">
+            {participants.map((participant, index) => (
+              <li key={index} className="list-group-item">
+                {participant}
+                <Button close onClick={() => handleRemoveParticipant(index)}/>
+              </li>
+            ))}
+          </ul>
         </ModalBody>
         <ModalFooter>
           <Button color="secondary" onClick={handleCloseModal}>Close</Button>

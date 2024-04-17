@@ -20,6 +20,7 @@ npm install bootstrap react-bootstrap
 npm install react-draggable-selector
 npm install react-redux
 npm install react-pro-sidebar
+npm install react-scroll
 
 
 
