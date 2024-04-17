@@ -64,6 +64,7 @@ class ListCalendarInvitationsView(APIView):
         serializer = CalendarInviteSerializer(invitations, many=True)
         return Response(serializer.data)
 
+
 class ListSentInvitationsView(APIView):
     permission_classes = [IsAuthenticated]
 

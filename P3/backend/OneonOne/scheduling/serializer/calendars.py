@@ -1,8 +1,13 @@
+from .meetings import MeetingSerializer
 from ..models.calendars import Calendar, CalendarInvite
 from rest_framework import serializers
 
+from accounts.serializers import UserSerializer
+
 
 class CalendarSerializer(serializers.ModelSerializer):
+    participants = UserSerializer(many=True, read_only=True)  # Use nested serializer
+    meetings = MeetingSerializer(many=True, read_only=True)
     class Meta:
         model = Calendar
         fields = ['id', 'name', 'owner', 'participants', 'meetings']

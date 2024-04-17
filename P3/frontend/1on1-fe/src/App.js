@@ -61,7 +61,7 @@ function App() {
                 <Route path="/login" element={<LoginPage/>}/>
                 <Route path="/about" element={<AboutPage/>}/>
                 <Route path="/event-details" element={<EventDetails/>}/>
-                <Route path="/suggest" element={<Suggestion/>}/>
+                <Route path="/suggest/:calendarId" element={<Suggestion/>}/>
                 <Route path="/availabilities" element={<ProtectedRoute
                     isAuthenticated={isAuthenticated}><Availabilities/></ProtectedRoute>}/>
             </Routes>

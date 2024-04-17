@@ -34,14 +34,15 @@ function CalendarInvitations() {
     }
   };
 
+  const pendingInvitations = invitations.filter(invite => invite.status !== 'accepted');
+
   return (
     <div className="mt-3 pt-3">
       <h2 className="text-center fs-1 my-4">Your Invitations</h2>
-      {invitations.length > 0 ? (
+      {pendingInvitations.length > 0 ? (
         <ListGroup>
-          {invitations.map(invite => (
-            <ListGroup.Item key={invite.id}
-                            className="d-flex justify-content-between align-items-center">
+          {pendingInvitations.map(invite => (
+            <ListGroup.Item key={invite.id} className="d-flex justify-content-between align-items-center">
               <div>
                 <strong>Calendar:</strong> {invite.calendar} -
                 <em> Invited by {invite.inviter}</em>

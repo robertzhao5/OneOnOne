@@ -1,8 +1,8 @@
 import axios from 'axios';
-import React, { useState, useEffect } from 'react';
-import { Modal, Button, ListGroup } from 'react-bootstrap';
+import React, {useState, useEffect} from 'react';
+import {Modal, Button, ListGroup} from 'react-bootstrap';
 
-function AddContactToCalendarModal({ show, onHide, calendarId }) {
+function AddContactToCalendarModal({show, onHide, calendarId}) {
   const [contacts, setContacts] = useState([]);
 
   useEffect(() => {
@@ -10,7 +10,7 @@ function AddContactToCalendarModal({ show, onHide, calendarId }) {
       if (show) {
         try {
           const response = await axios.get('contacts/list-contacts/', {
-            headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
+            headers: {Authorization: `Bearer ${localStorage.getItem('accessToken')}`},
           });
           setContacts(response.data);
         } catch (error) {
@@ -29,7 +29,7 @@ function AddContactToCalendarModal({ show, onHide, calendarId }) {
         calendar_id: calendarId,
         invitee_id: contactId,
       }, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
+        headers: {Authorization: `Bearer ${localStorage.getItem('accessToken')}`},
       });
       console.log('Invitation sent successfully:', response.data);
     } catch (error) {
@@ -38,22 +38,29 @@ function AddContactToCalendarModal({ show, onHide, calendarId }) {
   };
 
   return (
-    <Modal show={show} onHide={onHide} size="lg">
+    <Modal show={show} onHide={onHide} size="lg" centered>
       <Modal.Header closeButton>
         <Modal.Title>Select Contacts to Add</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <ListGroup>
+        <ListGroup variant="flush">
           {contacts.map(contact => (
-            <ListGroup.Item key={contact.id}>
-              {contact.contact.username}
+            <ListGroup.Item key={contact.id}
+                            className="d-flex justify-content-between align-items-center">
+              <div>{contact.contact.username}</div>
               <Button
                 variant="primary"
                 size="sm"
-                className="float-right"
-                onClick={() => handleInvite(contact.contact.id)}>Add</Button>
+                onClick={() => handleInvite(contact.contact.id)}>
+                Add
+              </Button>
             </ListGroup.Item>
           ))}
+          {contacts.length === 0 && (
+            <ListGroup.Item className="text-center">
+              No contacts available to add.
+            </ListGroup.Item>
+          )}
         </ListGroup>
       </Modal.Body>
       <Modal.Footer>

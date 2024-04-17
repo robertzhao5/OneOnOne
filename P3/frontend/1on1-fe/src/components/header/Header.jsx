@@ -41,9 +41,9 @@ function Header() {
                     <NavLink
                         className={({isActive}) => "nav-link fw-bold py-1 px-0" + (isActive ? " active" : "")}
                         to="/calendars">Your Calendars</NavLink>
-                    <NavLink
-                        className={({isActive}) => "nav-link fw-bold py-1 px-0" + (isActive ? " active" : "")}
-                        to="/suggest">Suggested</NavLink>
+                    {/*<NavLink*/}
+                    {/*    className={({isActive}) => "nav-link fw-bold py-1 px-0" + (isActive ? " active" : "")}*/}
+                    {/*    to="/suggest">Suggested</NavLink>*/}
                     <NavLink
                         className={({isActive}) => "nav-link fw-bold py-1 px-0" + (isActive ? " active" : "")}
                         to="/availabilities">Availabilities</NavLink>
@@ -51,7 +51,7 @@ function Header() {
                         className={({isActive}) => "nav-link fw-bold py-1 px-0" + (isActive ? " active" : "")}
                         to="/contacts">Contacts</NavLink>
                     <button
-                        className="nav-link fw-bold py-1 px-0"                        
+                        className="nav-link fw-bold py-1 px-0"
                         onClick={() => setShowModal(true)}>Sign out</button>
                 </nav>
             </div>

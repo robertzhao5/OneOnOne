@@ -19,7 +19,7 @@ class CalendarInvite(models.Model):
         ('accepted', 'Accepted'),
         ('declined', 'Declined'),
     ]
-    calendar = models.ForeignKey(Calendar, on_delete=models.CASCADE)# TODO: check if correct, was giving errors
+    calendar = models.ForeignKey(Calendar, on_delete=models.CASCADE)
     invitee = models.ForeignKey(User, related_name='invitations',
                                 on_delete=models.CASCADE)
     inviter = models.ForeignKey(User, related_name='sent_invites',
