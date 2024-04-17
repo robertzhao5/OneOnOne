@@ -28,7 +28,7 @@ class MeetingDetailView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class MeetingEditView(APIView):
+class MeetingEditView(APIView): # FIXME: no check for conflicts
     permissions_classes = [permissions.IsAuthenticated]
 
     def put(self, request, pk):

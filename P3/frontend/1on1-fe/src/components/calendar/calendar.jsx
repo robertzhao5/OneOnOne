@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { DayPilot, DayPilotCalendar, DayPilotNavigator } from "@daypilot/daypilot-lite-react";
 import { ButtonGroup, Modal, ModalHeader, ModalBody, ModalFooter, Button, InputGroup, InputGroupText, Input, Label, FormGroup, CustomInput }from 'reactstrap';
+import axios from 'axios';
+import { BsArrowRight,BsCalendar2CheckFill, BsCalendar2XFill } from 'react-icons/bs';
 
 // import "./CalendarStyles.css";
 
@@ -26,7 +28,8 @@ const Calendar = (calendar_id) => {
     }));
     const [timeSlots, setTimeSlots] = useState(
         []);
-
+    const [meeting, setMeeting] = useState(null);
+    
     const [startTime, setStartTime] = useState('10:05 AM');
     const [endTime, setEndTime] = useState('10:05 AM');
     const [showAs, setShowAs] = useState('busy');
@@ -49,24 +52,60 @@ const Calendar = (calendar_id) => {
   };
 
   const calendarRef = useRef()
-  const handleCloseModal = () => {
+  const handleCloseModal = (e) => {
     setModalOpen(false);
   };
   const handleSaveModal = () => {
     // Handle saving event
     console.log('Saving event:',startTime, endTime);
+    
     handleCloseModal();
   };
 
   const handleEventClick = (args) => {
-    const { start, end } = args.e.data;
+  const { start, end} = args.e.data;
   
   const startTime = start.toString("HH:mm");
   const endTime = end.toString("HH:mm");
 
   setStartTime(startTime);
   setEndTime(endTime);
+  // setParticipants(args.e.data.participants);
     setModalOpen(true);
+  };
+
+  useEffect(() => {
+    const fetchMeeting = async () => {
+      const meetingID = 1; //TODO change to actual meeting id
+      try {
+        const response = await axios.get(`scheduling/meeting-details/${meetingID}/`);
+        //check if response is valid
+        if (response.data) {
+          setMeeting(response.data);
+          console.log(response.data);
+        }
+      } catch (error) {
+        console.error("meeting not found:", error);
+      }
+    };
+    fetchMeeting();
+  }, []);
+
+const handleSave = async () => {
+    try {
+      const meetingID = 1; //TODO change to actual meeting id
+      // Assuming you have updated all necessary states (startTime, endTime, etc.)
+      const updatedMeeting = {
+        ...meeting,
+        start: startTime,
+        end: endTime,
+        // Add other properties as needed
+      };
+      await axios.put(`meeting-details/${meetingID}/edit`, updatedMeeting);
+      handleSaveModal(); // Close modal or do any other action upon successful save
+    } catch (error) {
+      console.error("Error updating meeting:", error);
+    }
   };
   
   const [calendarConfig, setCalendarConfig] = useState({
@@ -157,7 +196,7 @@ const Calendar = (calendar_id) => {
         participants: 4,
       },
     ];
-
+    
     const startDate = "2023-10-02";
 
     calendarRef.current.control.update({startDate, events});
@@ -202,6 +241,7 @@ const Calendar = (calendar_id) => {
         <h4>Show As</h4>
         <ButtonGroup aria-label="Avail-non avail selector">
       <Button color="danger" onClick={() => handleOptionChange('busy')} active={selectedOption === 'busy'}>Busy</Button>
+      <Button color="warning" onClick={() => handleOptionChange('Occupied')} active={selectedOption === 'Occupied'}>Occupied</Button>
       <Button color="success" onClick={() => handleOptionChange('free')} active={selectedOption === 'free'}>Free</Button>
     </ButtonGroup>
         <h4>Participant</h4>
