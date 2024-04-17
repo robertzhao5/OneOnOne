@@ -13,7 +13,6 @@ function CalendarCreateModal({ show, handleClose }) {
             }, { headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` } }
             );
             console.log('Calendar created successfully', response.data);
-            // refresh calendar list
             handleClose();
         } catch (error) {
             console.error('Failed to create calendar:', error.response ? error.response.data.message : error);

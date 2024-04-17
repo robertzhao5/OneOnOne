@@ -1,12 +1,15 @@
 import React, {useState} from "react";
 import CreateCalendarModal from "./CreateCalendarModal";  // Assuming you also extract modal into its own component
 
-const CreateCalendarButton = () => {
+const CreateCalendarButton = ( {refreshCalendars} ) => {
     const [showModal, setShowModal] = useState(false);
 
     const handleOpenModal = () => setShowModal(true);
-    const handleCloseModal = () => setShowModal(false);
-
+    // const handleCloseModal = () => setShowModal(false);
+    const handleCloseModal = function () {
+        setShowModal(false);
+        refreshCalendars();
+    }
     return (
         <>
             <button className="btn btn-primary mb-3"
