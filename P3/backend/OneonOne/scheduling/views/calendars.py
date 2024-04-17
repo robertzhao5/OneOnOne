@@ -55,6 +55,25 @@ class CalendarDeleteView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+class ListCalendarInvitationsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        # Fetch invitations where the current user is the invitee
+        invitations = CalendarInvite.objects.filter(invitee=request.user)
+        serializer = CalendarInviteSerializer(invitations, many=True)
+        return Response(serializer.data)
+
+class ListSentInvitationsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        # Fetch invitations where the current user is the invitee
+        invitations = CalendarInvite.objects.filter(inviter=request.user)
+        serializer = CalendarInviteSerializer(invitations, many=True)
+        return Response(serializer.data)
+
+
 class InviteContactToCalendarView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 

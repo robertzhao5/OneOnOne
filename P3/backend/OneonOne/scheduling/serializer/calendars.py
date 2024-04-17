@@ -1,4 +1,4 @@
-from ..models.calendars import Calendar
+from ..models.calendars import Calendar, CalendarInvite
 from rest_framework import serializers
 
 
@@ -37,8 +37,15 @@ class CalendarEditSerializer(serializers.ModelSerializer):
             'participants': {'required': False},
             'meetings': {'required': False}
         }
-    
+
     def validate(self, data):
         if not data['name'] and not data['participants'] and not data['meetings']:
             raise serializers.ValidationError("No data to update")
         return data
+
+
+class CalendarInviteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CalendarInvite
+        fields = ['id', 'calendar', 'inviter', 'invitee', 'sent_at', 'status']
+
