@@ -64,8 +64,9 @@ class InviteContactToCalendarView(APIView):
         invitee_id = request.data.get('invitee_id')
         # Logic to create a MeetingInvitation instance and send email
         invitation = CalendarInvite.objects.create(calendar=calendar,
+                                                   inviter_id=request.user.id,
                                                    invitee_id=invitee_id)
-        send_invitation_email(invitation)
+        # send_invitation_email(invitation)
         return Response({'message': 'Invitation sent successfully'}, status=200)
 
 
