@@ -28,7 +28,8 @@ class GenerateSuggestedSchedulesView(APIView):
                 end=end_time,
                 day=day,
                 organizer=calendar.owner,
-                participant=participant
+                participant=participant,
+                calendar=calendar
             )
             meetings.append(suggested_meeting)
 

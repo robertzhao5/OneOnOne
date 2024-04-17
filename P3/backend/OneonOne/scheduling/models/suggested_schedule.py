@@ -12,7 +12,9 @@ class SuggestedMeeting(models.Model):
     day = models.CharField(max_length=10)
     organizer = models.ForeignKey('auth.User', related_name='events',
                                   on_delete=models.CASCADE)
-    participant = models.OneToOneField(User, on_delete=models.CASCADE)
+    participant = models.ForeignKey(User, on_delete=models.CASCADE, related_name='suggested_user')
+    calendar = models.ForeignKey(Calendar, on_delete=models.CASCADE,
+                                 related_name='suggested_meetings')
 
 
 class SuggestedSchedule(models.Model):
